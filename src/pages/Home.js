@@ -1,25 +1,34 @@
 import React, { useEffect, useRef } from "react";
 import Layout from "../components/Layout";
-import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import WROLogo from '../images/wro.webp';
-
 const Home = () => {
   const logosContainerRef = useRef(null);
+  const logosRef = useRef(null);
 
   useEffect(() => {
     const logosContainer = logosContainerRef.current;
+    const logos = logosRef.current;
     let scrollPosition = 0;
+    let isCloned = false; // Flag to track if logos are cloned
 
     function marqueeScroll() {
-      scrollPosition -= 1;
+      scrollPosition -= 1; 
       logosContainer.style.transform = `translateX(${scrollPosition}px)`;
 
-      if (scrollPosition <= -logosContainer.offsetWidth) {
+      if (scrollPosition <= -logos.offsetWidth / 2 && !isCloned) {
+        // Clone the logos when the first set reaches halfway
+        logos.innerHTML += logos.innerHTML; 
+        isCloned = true;
+      }
+
+      if (scrollPosition <= -logos.offsetWidth) {
+        // Reset to the beginning smoothly
         scrollPosition = 0;
+        isCloned = false; // Remove the cloned set
+        logos.innerHTML = logos.innerHTML.slice(0, logos.innerHTML.length / 2); 
       }
 
       requestAnimationFrame(marqueeScroll);
@@ -27,6 +36,7 @@ const Home = () => {
 
     marqueeScroll();
   }, []);
+
 
   return (
     <Layout>
@@ -65,21 +75,14 @@ const Home = () => {
       </div>
 
       <div className="bg-blue-950 py-6">
-        <div
-          ref={logosContainerRef}
-          className="flex whitespace-nowrap space-x-4 overflow-hidden"
-        >
-          {/* Add your client logos here */}
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 1" className="h-12 w-auto" />
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 2" className="h-12 w-auto" />
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 3" className="h-12 w-auto" />
-          {/* ... (more logos) ... */}
-
-          {/* Duplicate logos to create seamless scrolling */}
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 1" className="h-12 w-auto" />
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 2" className="h-12 w-auto" />
-          <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 3" className="h-12 w-auto" />
-          {/* ... (duplicate more logos) ... */}
+        <div ref={logosContainerRef} className="flex whitespace-nowrap space-x-4 overflow-hidden">
+          <div ref={logosRef} className="flex">
+            {/* Add your client logos here (only once) */}
+            <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 1" className="h-12 w-auto" />
+            <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 2" className="h-12 w-auto" />
+            <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 3" className="h-12 w-auto" />
+            {/* ... (more logos) ... */}
+          </div> 
         </div>
       </div>
     </Layout>
