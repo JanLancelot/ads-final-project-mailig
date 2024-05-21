@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebase";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
