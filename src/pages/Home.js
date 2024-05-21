@@ -85,7 +85,7 @@ const Home = () => {
     setErrorMessage(null);
 
     try {
-      const messagesRef = collection(db, "messages");
+      const messagesRef = collection(db, "messages"); // Reference to the "messages" collection
       await addDoc(messagesRef, formData);
       setFormSubmitted(true);
     } catch (error) {
