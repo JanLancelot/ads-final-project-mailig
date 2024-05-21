@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <Navbar />
       <main className="flex-grow">{children}</main>
       <footer className="bg-gray-800 py-4 text-center text-white">
-        &copy; {new Date().getFullYear()} Your Name. All rights reserved.
+        &copy; {new Date().getFullYear()} Jan Lancelot Mailig. All rights reserved.
       </footer>
     </div>
   );

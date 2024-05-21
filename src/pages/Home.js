@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 
 import "slick-carousel/slick/slick.css";
@@ -37,6 +38,29 @@ const Home = () => {
     marqueeScroll();
   }, []);
 
+  const featuredProjects = [
+    {
+      title: "E-Commerce Platform",
+      description:
+        "Developed a robust e-commerce platform with React, handling product listings, shopping cart, and secure checkout.",
+      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg", // Replace with your project image
+      link: "/project1",
+    },
+    {
+      title: "Real-Time Chat App",
+      description:
+        "Built a real-time chat application using Firebase for seamless communication and group messaging.",
+      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg", 
+      link: "/project2",
+    },
+    {
+      title: "Portfolio Website",
+      description:
+        "Designed and implemented a modern portfolio website showcasing my skills and projects.",
+      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
+      link: "/project3",
+    },
+  ];
 
   return (
     <Layout>
@@ -85,6 +109,38 @@ const Home = () => {
           </div> 
         </div>
       </div>
+
+      <section id="projects" className="py-12 bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
+            Featured Projects
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project) => (
+              <div
+                key={project.title}
+                className="bg-white rounded-lg overflow-hidden shadow-md"
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
+                  <p className="text-gray-600 mb-4">{project.description}</p>
+                  <Link
+                    to={project.link}
+                    className="text-yellow-500 hover:text-yellow-600"
+                  >
+                    Learn More
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };
