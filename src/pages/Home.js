@@ -99,7 +99,7 @@ const Home = () => {
       </div>
 
       {/* Client Logos Section */}
-      <div className="bg-blue-950 py-6">
+      <div className="bg-blue-950 py-2">
         <div ref={logosContainerRef} className="flex whitespace-nowrap space-x-4 overflow-hidden">
           <div ref={logosRef} className="flex">
             <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 1" className="h-12 w-auto" />
