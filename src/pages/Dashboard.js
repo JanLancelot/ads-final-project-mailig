@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { db } from './firebase'; 
+import { collection, onSnapshot } from 'firebase/firestore';
+
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('messages');
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const messagesRef = firebase.firestore().collection('messages');
-    const unsubscribe = messagesRef.onSnapshot((snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setMessages(messagesData);
-    });
-
-    return unsubscribe;
-  }, []);
+    const [activeTab, setActiveTab] = useState('messages');
+    const [messages, setMessages] = useState([]);
+  
+    useEffect(() => {
+      const messagesRef = collection(db, 'messages');
+      const unsubscribe = onSnapshot(messagesRef, (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(messagesData);
+      });
+  
+      return unsubscribe;
+    }, []);
 
   return (
     <div className="flex h-screen">
