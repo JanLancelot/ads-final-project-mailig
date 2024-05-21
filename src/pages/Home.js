@@ -10,26 +10,25 @@ const Home = () => {
   const logosRef = useRef(null);
 
   useEffect(() => {
+    // Marquee scroll effect for client logos
     const logosContainer = logosContainerRef.current;
     const logos = logosRef.current;
     let scrollPosition = 0;
-    let isCloned = false; // Flag to track if logos are cloned
+    let isCloned = false;
 
     function marqueeScroll() {
-      scrollPosition -= 1; 
+      scrollPosition -= 1;
       logosContainer.style.transform = `translateX(${scrollPosition}px)`;
 
       if (scrollPosition <= -logos.offsetWidth / 2 && !isCloned) {
-        // Clone the logos when the first set reaches halfway
-        logos.innerHTML += logos.innerHTML; 
+        logos.innerHTML += logos.innerHTML;
         isCloned = true;
       }
 
       if (scrollPosition <= -logos.offsetWidth) {
-        // Reset to the beginning smoothly
         scrollPosition = 0;
-        isCloned = false; // Remove the cloned set
-        logos.innerHTML = logos.innerHTML.slice(0, logos.innerHTML.length / 2); 
+        isCloned = false;
+        logos.innerHTML = logos.innerHTML.slice(0, logos.innerHTML.length / 2);
       }
 
       requestAnimationFrame(marqueeScroll);
@@ -43,14 +42,14 @@ const Home = () => {
       title: "E-Commerce Platform",
       description:
         "Developed a robust e-commerce platform with React, handling product listings, shopping cart, and secure checkout.",
-      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg", // Replace with your project image
+      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
       link: "/project1",
     },
     {
       title: "Real-Time Chat App",
       description:
         "Built a real-time chat application using Firebase for seamless communication and group messaging.",
-      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg", 
+      image: "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
       link: "/project2",
     },
     {
@@ -64,8 +63,9 @@ const Home = () => {
 
   return (
     <Layout>
+      {/* Hero Section */}
       <div className="bg-blue-900 min-h-screen flex items-center justify-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"> 
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl font-extrabold text-yellow-400 sm:text-5xl md:text-6xl">
               Welcome to <span className="text-white">Lancelot</span>'s
@@ -98,18 +98,18 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Client Logos Section */}
       <div className="bg-blue-950 py-6">
         <div ref={logosContainerRef} className="flex whitespace-nowrap space-x-4 overflow-hidden">
           <div ref={logosRef} className="flex">
-            {/* Add your client logos here (only once) */}
             <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 1" className="h-12 w-auto" />
             <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 2" className="h-12 w-auto" />
             <img src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png" alt="Client 3" className="h-12 w-auto" />
-            {/* ... (more logos) ... */}
-          </div> 
+          </div>
         </div>
       </div>
 
+      {/* Featured Projects Section */}
       <section id="projects" className="py-12 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
