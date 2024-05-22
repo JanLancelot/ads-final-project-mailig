@@ -18,52 +18,32 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [orderDirection, setOrderDirection] = useState("desc"); // Initial order direction (descending)
-  const [lastVisible, setLastVisible] = useState(null);
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
-
-  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        setMessages([]); // Clear the messages array
-        setLastVisible(null); // Reset lastVisible when fetching new messages
-
         const messagesQuery = query(
           collection(db, "messages"),
-          orderBy("timestamp", orderDirection), // Order by timestamp field
-          startAfter(lastVisible || null), // Use lastVisible even when switching directions
-          limit(10)
+          orderBy("timestamp", "desc") // Fetch in descending order
         );
-
-        const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
-          const messagesArray = [];
-          let unreadCount = 0;
-          querySnapshot.forEach((doc) => {
-            const message = { id: doc.id, ...doc.data() };
-            messagesArray.push(message);
-            if (!message.read) {
-              unreadCount++;
-            }
-          });
-          setMessages(messagesArray);
-          setUnreadCount(unreadCount);
-          setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-          setTotalMessages(querySnapshot.size);
-        });
-
-        return unsubscribe;
+        const querySnapshot = await getDocs(messagesQuery);
+        const messagesArray = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(messagesArray);
+        setTotalMessages(messagesArray.length);
+        setUnreadCount(messagesArray.filter((message) => !message.read).length);
       } catch (error) {
         console.error("Error fetching messages: ", error);
       } finally {
         setIsLoading(false);
       }
     };
-
-    // Only fetch messages when orderDirection or reset changes
-    fetchMessages(); 
-  }, [orderDirection, reset]); 
+    fetchMessages();
+  }, []);
 
   const toggleRead = (messageId) => {
     const messageRef = doc(db, "messages", messageId);
@@ -77,6 +57,9 @@ const Dashboard = () => {
   };
 
   const filterMessages = () => {
+    if (searchQuery === "") {
+      return messages;
+    }
     const filteredMessages = messages.filter(
       (message) =>
         message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -95,13 +78,21 @@ const Dashboard = () => {
         message.id === messageId ? { ...message, read: false } : message
       )
     );
-    setReset(!reset); // Trigger a reset
   };
 
   const handleSortChange = () => {
-    setReset(!reset); // Trigger a reset
-    setLastVisible(null); // Reset lastVisible when changing sort order
-    setOrderDirection(orderDirection === "asc" ? "desc" : "asc"); // Toggle order direction
+    setOrderDirection((prevDirection) => (prevDirection === "asc" ? "desc" : "asc"));
+
+    // Sort the messages array in-place
+    setMessages((prevMessages) => {
+      return prevMessages.sort((a, b) => {
+        if (orderDirection === "asc") {
+          return a.timestamp - b.timestamp;
+        } else {
+          return b.timestamp - a.timestamp;
+        }
+      });
+    });
   };
 
   return (
