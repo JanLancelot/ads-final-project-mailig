@@ -33,7 +33,7 @@ const Dashboard = () => {
         const messagesQuery = query(
           collection(db, "messages"),
           orderBy("timestamp", orderDirection), // Order by timestamp field
-          startAfter(lastVisible || null),
+          startAfter(lastVisible || null), // Use lastVisible even when switching directions
           limit(10)
         );
 
@@ -60,8 +60,10 @@ const Dashboard = () => {
         setIsLoading(false);
       }
     };
-    fetchMessages();
-  }, [orderDirection, reset]); // Add orderDirection to dependencies
+
+    // Only fetch messages when orderDirection or reset changes
+    fetchMessages(); 
+  }, [orderDirection, reset]); 
 
   const toggleRead = (messageId) => {
     const messageRef = doc(db, "messages", messageId);
