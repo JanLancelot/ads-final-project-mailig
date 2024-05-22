@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [lastVisible, setLastVisible] = useState(null);
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [refreshMessages, setRefreshMessages] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -46,7 +47,8 @@ const Dashboard = () => {
       }
     };
     fetchMessages();
-  }, [sortOrder]);
+    setRefreshMessages(false);
+  }, [sortOrder, refreshMessages]);
 
   const filterMessages = () => {
     const filteredMessages = messages.filter(
@@ -58,11 +60,15 @@ const Dashboard = () => {
     return filteredMessages;
   };
 
-  const toggleRead = (messageId) => {
-    const messageRef = doc(db, 'messages', messageId);
-    updateDoc(messageRef, { read: true });
+  const toggleRead = async (messageId) => {
+    try {
+      const messageRef = doc(db, 'messages', messageId);
+      await updateDoc(messageRef, { read: true });
+      setRefreshMessages(true); // Set the state variable to trigger a re-render
+    } catch (error) {
+      console.error("Error updating message: ", error);
+    }
   };
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
