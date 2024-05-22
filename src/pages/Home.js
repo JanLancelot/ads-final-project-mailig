@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
+import ChatWindow from '../components/ChatWindow'
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -303,6 +304,7 @@ const Home = () => {
           )}
         </div>
       </section>
+      <ChatWindow />
     </Layout>
   );
 };
