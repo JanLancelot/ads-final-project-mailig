@@ -151,9 +151,7 @@ const Dashboard = () => {
                   />
                   <button
                     className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-                    onClick={() =>
-                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                    }
+                    onClick={handleSortChange}
                   >
                     Sort {sortOrder === "asc" ? "▲" : "▼"}
                   </button>
