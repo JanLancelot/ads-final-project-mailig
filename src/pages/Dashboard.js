@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [orderDirection, setOrderDirection] = useState("desc"); // Initial order direction (descending)
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -70,8 +70,21 @@ const Dashboard = () => {
     return filteredMessages;
   };
 
+  const toggleUnread = (messageId) => {
+    const messageRef = doc(db, "messages", messageId);
+    updateDoc(messageRef, { read: false });
+
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId ? { ...message, read: false } : message
+      )
+    );
+  };
+
   const handleSortChange = () => {
-    setOrderDirection((prevDirection) => (prevDirection === "asc" ? "desc" : "asc"));
+    setOrderDirection((prevDirection) =>
+      prevDirection === "asc" ? "desc" : "asc"
+    );
 
     // Sort the messages array in-place
     setMessages((prevMessages) => {
@@ -85,73 +98,49 @@ const Dashboard = () => {
     });
   };
 
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div
-        className={`bg-gray-800 text-gray-100 w-64 p-4 transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? "w-16" : ""
-        }`}
+      <button
+        className="bg-gray-800 text-gray-100 p-2 rounded-r-md focus:outline-none"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Dashboard</h2>
-          <button
-            onClick={toggleSidebar}
-            className="text-gray-400 hover:text-gray-200"
-          >
-            {sidebarCollapsed ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+        {isSidebarOpen ? ">" : "<"}
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`bg-gray-800 text-gray-100 p-4 ${
+          isSidebarOpen ? "w-64" : "w-16"
+        } transition-width duration-300`}
+      >
+        {isSidebarOpen && (
+          <>
+            <div className="mb-4">
+              <h2 className="text-xl font-bold">Dashboard</h2>
+            </div>
+            <nav>
+              <a
+                href="#"
+                className={`block py-2 px-4 rounded ${
+                  activeTab === "messages" ? "bg-gray-700" : ""
+                }`}
+                onClick={() => setActiveTab("messages")}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3.707-3.707a1 1 0 00-1.414 1.414l3.707 3.707a1 1 0 001.414-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+                Messages
+              </a>
+              <a
+                href="#"
+                className={`block py-2 px-4 rounded ${
+                  activeTab === "content" ? "bg-gray-700" : ""
+                }`}
+                onClick={() => setActiveTab("content")}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 1.414L10 10.586l4.293-4.293a1 1 0 111.414 1.414L11.414 11.414l4.293 4.293a1 1 0 01-1.414 1.414L10 12.586l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 11.414 4.293 7.121a1 1 0 011.414-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            )}
-          </button>
-        </div>
-        <nav>
-          <a
-            href="#"
-            className={`block py-2 px-4 rounded ${
-              activeTab === "messages" ? "bg-gray-700" : ""
-            }`}
-            onClick={() => setActiveTab("messages")}
-          >
-            Messages
-          </a>
-          <a
-            href="#"
-            className={`block py-2 px-4 rounded ${
-              activeTab === "content" ? "bg-gray-700" : ""
-            }`}
-            onClick={() => setActiveTab("content")}
-          >
-            Content
-          </a>
-        </nav>
+                Content
+              </a>
+            </nav>
+          </>
+        )}
       </div>
       {/* Main Content */}
       <div className="flex-1 p-4">
@@ -203,7 +192,10 @@ const Dashboard = () => {
                         <p className="text-gray-600">{message.email}</p>
                         <p className="mt-2">{message.message}</p>
                         <p className="text-gray-500">
-                          {new Date(message.timestamp.seconds * 1000).toLocaleString()}
+                          {/* Format the timestamp */}
+                          {new Date(
+                            message.timestamp.seconds * 1000
+                          ).toLocaleString()}
                         </p>
                         <button
                           className={`mt-2 px-4 py-2 rounded ${
@@ -213,7 +205,7 @@ const Dashboard = () => {
                           }`}
                           onClick={() => toggleRead(message.id)}
                         >
-                          {!message.read ? "Mark as Read" : "Read"}
+                          {!message.read ? "Mark as Read" : "Mark as Unread"}
                         </button>
                       </div>
                     ))}
