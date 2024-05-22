@@ -172,6 +172,10 @@ const Dashboard = () => {
                         <h3 className="text-lg font-bold">{message.name}</h3>
                         <p className="text-gray-600">{message.email}</p>
                         <p className="mt-2">{message.message}</p>
+                        <p className="text-gray-500">
+                          {/* Format the timestamp */}
+                          {new Date(message.timestamp.seconds * 1000).toLocaleString()}
+                        </p>
                         <button
                           className={`mt-2 px-4 py-2 rounded ${
                             !message.read
