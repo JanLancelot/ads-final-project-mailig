@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [orderDirection, setOrderDirection] = useState("asc"); // Initial order direction
+  const [orderDirection, setOrderDirection] = useState("desc"); // Initial order direction (descending)
   const [lastVisible, setLastVisible] = useState(null);
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -61,7 +61,7 @@ const Dashboard = () => {
       }
     };
     fetchMessages();
-  }, [orderDirection, reset]);
+  }, [orderDirection, reset]); // Add orderDirection to dependencies
 
   const toggleRead = (messageId) => {
     const messageRef = doc(db, "messages", messageId);
