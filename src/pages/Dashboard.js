@@ -20,7 +20,11 @@ const Dashboard = () => {
   const [orderDirection, setOrderDirection] = useState("desc"); // Initial order direction (descending)
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -100,47 +104,47 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
       <button
-        className="bg-gray-800 text-gray-100 p-2 rounded-r-md focus:outline-none"
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="flex md:hidden items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-gray-900 hover:border-gray-300"
+        onClick={toggleSidebar}
       >
-        {isSidebarOpen ? ">" : "<"}
+        <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fillRule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clipRule="evenodd"
+          />
+        </svg>
       </button>
-
       {/* Sidebar */}
       <div
-        className={`bg-gray-800 text-gray-100 p-4 ${
-          isSidebarOpen ? "w-64" : "w-16"
-        } transition-width duration-300`}
+        className={`${
+          showSidebar ? "block" : "hidden"
+        } bg-gray-800 text-gray-100 w-64 p-4 md:block`}
       >
-        {isSidebarOpen && (
-          <>
-            <div className="mb-4">
-              <h2 className="text-xl font-bold">Dashboard</h2>
-            </div>
-            <nav>
-              <a
-                href="#"
-                className={`block py-2 px-4 rounded ${
-                  activeTab === "messages" ? "bg-gray-700" : ""
-                }`}
-                onClick={() => setActiveTab("messages")}
-              >
-                Messages
-              </a>
-              <a
-                href="#"
-                className={`block py-2 px-4 rounded ${
-                  activeTab === "content" ? "bg-gray-700" : ""
-                }`}
-                onClick={() => setActiveTab("content")}
-              >
-                Content
-              </a>
-            </nav>
-          </>
-        )}
+        <div className="mb-4">
+          <h2 className="text-xl font-bold">Dashboard</h2>
+        </div>
+        <nav>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "messages" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("messages")}
+          >
+            Messages
+          </a>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "content" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("content")}
+          >
+            Content
+          </a>
+        </nav>
       </div>
       {/* Main Content */}
       <div className="flex-1 p-4">
