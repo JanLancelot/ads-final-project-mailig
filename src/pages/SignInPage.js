@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +13,10 @@ const SignInPage = () => {
     e.preventDefault();
 
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('User signed in:', user);
+
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
