@@ -16,6 +16,8 @@ const Dashboard = () => {
         }));
         setMessages(messagesData);
       });
+      
+      console.log(messages);
   
       return unsubscribe;
     }, []);
