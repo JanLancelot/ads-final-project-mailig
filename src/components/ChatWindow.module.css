@@ -7,12 +7,34 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     padding: 1rem;
     z-index: 50;
-    max-width: 300px;
+    max-width: 400px; /* Increase the maximum width */
+    width: 100%; /* Make the chat window take up the full available width */
+    max-height: 80vh; /* Adjust the maximum height to fit within the viewport */
+    display: flex;
+    flex-direction: column; /* Use a column layout */
+  }
+  
+  .chatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
   }
   
   .chatMessages {
-    max-height: 12rem;
-    overflow-y: auto;
+    flex-grow: 1; /* Allow the messages container to grow and take up remaining space */
+    overflow-y: auto; /* Add scrollbars if the messages exceed the container height */
+    padding: 0.5rem;
+  }
+  
+  .chatInput {
+    display: flex;
+    margin-top: 1rem;
+  }
+  
+  .chatInput input {
+    flex-grow: 1;
+    margin-right: 0.5rem;
   }
   
   .chatButton {

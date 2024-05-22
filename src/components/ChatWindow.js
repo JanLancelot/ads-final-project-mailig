@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase, ref, onValue, push } from 'firebase/database';
 import styles from './ChatWindow.module.css';
 
@@ -8,6 +8,7 @@ const ChatWindow = () => {
   const [name, setName] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const db = getDatabase();
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
     const messagesRef = ref(db, 'messages');
@@ -16,6 +17,12 @@ const ChatWindow = () => {
       setMessages(data ? Object.values(data) : []);
     });
   }, [db]);
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -45,7 +52,7 @@ const ChatWindow = () => {
     <>
       {isOpen ? (
         <div className={styles.chatWindow}>
-          <div className="flex justify-between items-center mb-2">
+          <div className={styles.chatHeader}>
             <h2 className="text-lg font-semibold">Chat</h2>
             <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,27 +60,27 @@ const ChatWindow = () => {
               </svg>
             </button>
           </div>
-          <div className={styles.chatMessages}>
+          <div className={styles.chatMessages} ref={messagesContainerRef}>
             {messages.map((message, index) => (
               <div key={index} className="mb-2">
                 <span className="font-semibold">{message.name}:</span> {message.message}
               </div>
             ))}
           </div>
-          <div className="mt-4 flex">
+          <div className={styles.chatInput}>
             <input
               type="text"
               placeholder="Enter your name"
               value={name}
               onChange={handleNameChange}
-              className="flex-grow mr-2 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="text"
               placeholder="Type your message"
               value={newMessage}
               onChange={handleMessageChange}
-              className="flex-grow mr-2 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleSendMessage}
