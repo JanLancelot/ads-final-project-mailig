@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, query, orderBy, startAfter, limit, onSnapshot } from 'firebase/firestore';
+import { collection, doc, updateDoc, getDocs, query, orderBy, startAfter, limit, onSnapshot } from 'firebase/firestore';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('messages');

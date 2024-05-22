@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 
 import "slick-carousel/slick/slick.css";
@@ -16,6 +16,7 @@ const Home = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const logosContainerRef = useRef(null);
   const logosRef = useRef(null);
@@ -73,6 +74,24 @@ const Home = () => {
     }
 
     marqueeScroll();
+
+    // Listen for changes in the 'messages' collection
+    const unsubscribe = onSnapshot(
+      collection(db, "messages"),
+      (querySnapshot) => {
+        let unreadCount = 0;
+        querySnapshot.forEach((doc) => {
+          const message = doc.data();
+          if (!message.read) {
+            unreadCount++;
+          }
+        });
+        setUnreadCount(unreadCount);
+      }
+    );
+
+    // Clean up the listener when the component unmounts
+    return unsubscribe;
   }, []);
 
   const handleChange = (e) => {
@@ -86,8 +105,13 @@ const Home = () => {
 
     try {
       const messagesRef = collection(db, "messages"); // Reference to the "messages" collection
-      await addDoc(messagesRef, formData);
+      await addDoc(messagesRef, {
+        ...formData,
+        read: false,
+        timestamp: new Date(),
+      });
       setFormSubmitted(true);
+      setFormData({ name: "", email: "", message: "" }); // Reset form data
     } catch (error) {
       console.error("Error adding document:", error);
       setErrorMessage("An error occurred while sending your message.");
@@ -120,12 +144,17 @@ const Home = () => {
                   View Projects
                 </a>
               </div>
-              <div className="rounded-md shadow">
+              <div className="rounded-md shadow relative">
                 <a
                   href="#contact"
                   className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-yellow-400 hover:bg-yellow-500 md:py-4 md:text-lg md:px-10"
                 >
                   Get in Touch
+                  {unreadCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white rounded-full px-2 py-1 text-sm">
+                      {unreadCount}
+                    </span>
+                  )}
                 </a>
               </div>
             </div>
@@ -198,7 +227,6 @@ const Home = () => {
           <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
             Contact Me
           </h2>
-
           {formSubmitted ? (
             <p className="text-green-500 text-center mb-4">
               Thank you for your message!
@@ -278,5 +306,4 @@ const Home = () => {
     </Layout>
   );
 };
-
 export default Home;
