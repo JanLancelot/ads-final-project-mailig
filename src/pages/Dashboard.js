@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase'; 
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('messages');
     const [messages, setMessages] = useState([]);
-  
+
     useEffect(() => {
-      const messagesRef = collection(db, 'messages');
-      const unsubscribe = onSnapshot(messagesRef, (snapshot) => {
-        const messagesData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMessages(messagesData);
-      });
-      
-      console.log(messages);
+      const fetchMessages = async () => {
+        try {
+          const querySnapshot = await getDocs(collection(db, 'messages'));
+          const messagesArray = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setMessages(messagesArray);
+        } catch (error) {
+          console.error("Error fetching messages: ", error);
+        }
+      };
   
-      return unsubscribe;
+      fetchMessages();
     }, []);
 
   return (
