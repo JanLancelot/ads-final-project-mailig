@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [orderDirection, setOrderDirection] = useState("asc"); // Initial order direction
   const [lastVisible, setLastVisible] = useState(null);
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -32,7 +32,7 @@ const Dashboard = () => {
 
         const messagesQuery = query(
           collection(db, "messages"),
-          orderBy("timestamp", sortOrder),
+          orderBy("timestamp", orderDirection), // Order by timestamp field
           startAfter(lastVisible || null),
           limit(10)
         );
@@ -61,7 +61,7 @@ const Dashboard = () => {
       }
     };
     fetchMessages();
-  }, [sortOrder, reset]);
+  }, [orderDirection, reset]);
 
   const toggleRead = (messageId) => {
     const messageRef = doc(db, "messages", messageId);
@@ -99,7 +99,7 @@ const Dashboard = () => {
   const handleSortChange = () => {
     setReset(!reset); // Trigger a reset
     setLastVisible(null); // Reset lastVisible when changing sort order
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setOrderDirection(orderDirection === "asc" ? "desc" : "asc"); // Toggle order direction
   };
 
   return (
@@ -153,7 +153,7 @@ const Dashboard = () => {
                     className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
                     onClick={handleSortChange}
                   >
-                    Sort {sortOrder === "asc" ? "▲" : "▼"}
+                    Sort {orderDirection === "asc" ? "▲" : "▼"}
                   </button>
                 </div>
                 <div className="mb-4 flex items-center justify-between">
