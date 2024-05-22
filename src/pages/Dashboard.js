@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, doc, updateDoc, getDocs, query, orderBy, startAfter, limit, onSnapshot } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  doc,
+  updateDoc,
+  getDocs,
+  query,
+  orderBy,
+  startAfter,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('messages');
+  const [activeTab, setActiveTab] = useState("messages");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [lastVisible, setLastVisible] = useState(null);
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -18,9 +28,11 @@ const Dashboard = () => {
     const fetchMessages = async () => {
       try {
         setMessages([]); // Clear the messages array
+        setLastVisible(null); // Reset lastVisible when fetching new messages
+
         const messagesQuery = query(
-          collection(db, 'messages'),
-          orderBy('timestamp', sortOrder),
+          collection(db, "messages"),
+          orderBy("timestamp", sortOrder),
           startAfter(lastVisible || null),
           limit(10)
         );
@@ -52,7 +64,7 @@ const Dashboard = () => {
   }, [sortOrder, reset]);
 
   const toggleRead = (messageId) => {
-    const messageRef = doc(db, 'messages', messageId);
+    const messageRef = doc(db, "messages", messageId);
     updateDoc(messageRef, { read: true });
 
     setMessages((prevMessages) =>
@@ -73,7 +85,7 @@ const Dashboard = () => {
   };
 
   const toggleUnread = (messageId) => {
-    const messageRef = doc(db, 'messages', messageId);
+    const messageRef = doc(db, "messages", messageId);
     updateDoc(messageRef, { read: false });
 
     setMessages((prevMessages) =>
@@ -84,6 +96,11 @@ const Dashboard = () => {
     setReset(!reset); // Trigger a reset
   };
 
+  const handleSortChange = () => {
+    setReset(!reset); // Trigger a reset
+    setLastVisible(null); // Reset lastVisible when changing sort order
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
 
   return (
     <div className="flex h-screen">
@@ -96,18 +113,18 @@ const Dashboard = () => {
           <a
             href="#"
             className={`block py-2 px-4 rounded ${
-              activeTab === 'messages' ? 'bg-gray-700' : ''
+              activeTab === "messages" ? "bg-gray-700" : ""
             }`}
-            onClick={() => setActiveTab('messages')}
+            onClick={() => setActiveTab("messages")}
           >
             Messages
           </a>
           <a
             href="#"
             className={`block py-2 px-4 rounded ${
-              activeTab === 'content' ? 'bg-gray-700' : ''
+              activeTab === "content" ? "bg-gray-700" : ""
             }`}
-            onClick={() => setActiveTab('content')}
+            onClick={() => setActiveTab("content")}
           >
             Content
           </a>
@@ -121,7 +138,7 @@ const Dashboard = () => {
           </div>
         ) : (
           <>
-            {activeTab === 'messages' && (
+            {activeTab === "messages" && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Messages</h2>
                 <div className="mb-4 flex items-center">
@@ -134,9 +151,11 @@ const Dashboard = () => {
                   />
                   <button
                     className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                    onClick={() =>
+                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                    }
                   >
-                    Sort {sortOrder === 'asc' ? '▲' : '▼'}
+                    Sort {sortOrder === "asc" ? "▲" : "▼"}
                   </button>
                 </div>
                 <div className="mb-4 flex items-center justify-between">
@@ -156,7 +175,7 @@ const Dashboard = () => {
                       <div
                         key={message.id}
                         className={`bg-white shadow-md rounded-md p-4 ${
-                          !message.read ? 'border-l-4 border-blue-500' : ''
+                          !message.read ? "border-l-4 border-blue-500" : ""
                         }`}
                       >
                         <h3 className="text-lg font-bold">{message.name}</h3>
@@ -164,11 +183,13 @@ const Dashboard = () => {
                         <p className="mt-2">{message.message}</p>
                         <button
                           className={`mt-2 px-4 py-2 rounded ${
-                            !message.read ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+                            !message.read
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-300 text-gray-700"
                           }`}
                           onClick={() => toggleRead(message.id)}
                         >
-                          {!message.read ? 'Mark as Read' : 'Mark as Unread'}
+                          {!message.read ? "Mark as Read" : "Mark as Unread"}
                         </button>
                       </div>
                     ))}
@@ -178,7 +199,7 @@ const Dashboard = () => {
                 )}
               </div>
             )}
-            {activeTab === 'content' && (
+            {activeTab === "content" && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Content</h2>
                 {/* Add your content tab logic here */}
