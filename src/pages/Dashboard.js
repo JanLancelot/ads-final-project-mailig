@@ -12,9 +12,12 @@ const Dashboard = () => {
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const [reset, setReset] = useState(false);
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
+        setMessages([]); // Clear the messages array
         const messagesQuery = query(
           collection(db, 'messages'),
           orderBy('timestamp', sortOrder),
@@ -32,7 +35,7 @@ const Dashboard = () => {
               unreadCount++;
             }
           });
-          setMessages((prevMessages) => [...prevMessages, ...messagesArray]);
+          setMessages(messagesArray);
           setUnreadCount(unreadCount);
           setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
           setTotalMessages(querySnapshot.size);
@@ -46,7 +49,18 @@ const Dashboard = () => {
       }
     };
     fetchMessages();
-  }, [sortOrder]);
+  }, [sortOrder, reset]);
+
+  const toggleRead = (messageId) => {
+    const messageRef = doc(db, 'messages', messageId);
+    updateDoc(messageRef, { read: true });
+
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId ? { ...message, read: true } : message
+      )
+    );
+  };
 
   const filterMessages = () => {
     const filteredMessages = messages.filter(
@@ -58,17 +72,18 @@ const Dashboard = () => {
     return filteredMessages;
   };
 
-  const toggleRead = (messageId) => {
+  const toggleUnread = (messageId) => {
     const messageRef = doc(db, 'messages', messageId);
-    updateDoc(messageRef, { read: true });
-  
-    // Update the local state
+    updateDoc(messageRef, { read: false });
+
     setMessages((prevMessages) =>
       prevMessages.map((message) =>
-        message.id === messageId ? { ...message, read: true } : message
+        message.id === messageId ? { ...message, read: false } : message
       )
     );
+    setReset(!reset); // Trigger a reset
   };
+
 
   return (
     <div className="flex h-screen">
