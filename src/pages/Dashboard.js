@@ -183,15 +183,18 @@ const Dashboard = () => {
                             message.timestamp.seconds * 1000
                           ).toLocaleString()}
                         </p>
-                        <span
-                          className={`mt-2 px-2 py-1 text-xs rounded ${
-                            message.read
-                              ? "bg-green-200 text-green-800"
-                              : "bg-blue-200 text-blue-800"
-                          }`}
-                        >
-                          {message.read ? "Read" : "Unread"}
-                        </span>
+                        {!message.read ? (
+                          <button
+                            className="mt-2 px-4 py-2 rounded bg-blue-500 text-white"
+                            onClick={() => toggleRead(message.id)}
+                          >
+                            Mark as Read
+                          </button>
+                        ) : (
+                          <span className="mt-2 px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                            Read
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
