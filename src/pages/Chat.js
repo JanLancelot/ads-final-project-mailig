@@ -3,12 +3,11 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import firebaseConfig from '../firebase'; // Import Firebase configuration from another file
+import { getAuth } from "firebase/auth";
+import { db } from "../firebase";
 
-firebase.initializeApp(firebaseConfig);
+const auth = getAuth();
 
-const db = firebase.firestore();
-const auth = firebase.auth();
 
 function Chat() {
   const [messages, setMessages] = useState([]);
