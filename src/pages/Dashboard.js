@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [orderDirection, setOrderDirection] = useState("asc"); 
+  const [orderDirection, setOrderDirection] = useState("asc");
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -29,7 +29,7 @@ const Dashboard = () => {
       try {
         const messagesQuery = query(
           collection(db, "messages"),
-          orderBy("timestamp", "desc") 
+          orderBy("timestamp", "desc")
         );
         const querySnapshot = await getDocs(messagesQuery);
         const messagesArray = querySnapshot.docs.map((doc) => ({
@@ -48,11 +48,35 @@ const Dashboard = () => {
     fetchMessages();
   }, []);
 
-  const toggleRead = (messageId) => {
+  const toggleRead = async (messageId) => {
     const messageRef = doc(db, "messages", messageId);
-    updateDoc(messageRef, { read: true }); 
+    await updateDoc(messageRef, { read: true });
 
-    // No need to update the local state here as Firebase will update it in real-time
+    // Update the local state to reflect the change
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId ? { ...message, read: true } : message
+      )
+    );
+    setUnreadCount((prevUnreadCount) => prevUnreadCount - 1);
+  };
+
+  const markAllAsRead = async () => {
+    const unreadMessages = messages.filter((message) => !message.read);
+    const batch = db.batch();
+
+    unreadMessages.forEach((message) => {
+      const messageRef = doc(db, "messages", message.id);
+      batch.update(messageRef, { read: true });
+    });
+
+    await batch.commit();
+
+    // Update the local state to reflect the change
+    setMessages((prevMessages) =>
+      prevMessages.map((message) => ({ ...message, read: true }))
+    );
+    setUnreadCount(0);
   };
 
   const filterMessages = () => {
@@ -76,7 +100,7 @@ const Dashboard = () => {
     setMessages((prevMessages) => {
       return prevMessages.sort((a, b) => {
         if (orderDirection === "asc") {
-          return a.timestamp - b.timestamp; 
+          return a.timestamp - b.timestamp;
         } else {
           return b.timestamp - a.timestamp;
         }
@@ -160,7 +184,7 @@ const Dashboard = () => {
                   </p>
                   <button
                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    onClick={() => setMessages([])}
+                    onClick={markAllAsRead}
                   >
                     Mark All as Read
                   </button>
@@ -183,16 +207,18 @@ const Dashboard = () => {
                             message.timestamp.seconds * 1000
                           ).toLocaleString()}
                         </p>
-                        <button
-                          className={`mt-2 px-4 py-2 rounded ${
-                            !message.read
-                              ? "bg-blue-500 text-white"
-                              : "bg-green-300 text-white"
-                          }`}
-                          onClick={() => toggleRead(message.id)}
-                        >
-                          {!message.read ? "Mark as Read" : "Read"}
-                        </button>
+                        {!message.read ? (
+                          <button
+                            className="mt-2 px-4 py-2 rounded bg-blue-500 text-white"
+                            onClick={() => toggleRead(message.id)}
+                          >
+                            Mark as Read
+                          </button>
+                        ) : (
+                          <span className="mt-2 px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                            Read
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -213,5 +239,6 @@ const Dashboard = () => {
     </div>
   );
 };
+
 
 export default Dashboard;
