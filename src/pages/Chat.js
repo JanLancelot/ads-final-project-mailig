@@ -1,7 +1,7 @@
 // Chat.js
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebase';
-import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp  } from "firebase/firestore";
+import { ref, push, onValue, serverTimestamp } from "firebase/database";
 
 const Chat = () => {
   const [message, setMessage] = useState("");
@@ -9,13 +9,14 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const messagesRef = collection(db, "messages");
-    const q = query(messagesRef, orderBy("createdAt", "asc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const messagesRef = ref(db, 'messages');
+    const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
       const fetchedMessages = [];
-      querySnapshot.forEach((doc) => {
-        fetchedMessages.push({ id: doc.id, ...doc.data() });
-      });
+      for (let id in data) {
+        fetchedMessages.push({ id, ...data[id] });
+      }
+      fetchedMessages.sort((a, b) => a.createdAt - b.createdAt);
       setMessages(fetchedMessages);
     });
 
@@ -32,7 +33,7 @@ const Chat = () => {
 
     if (message.trim() !== "") {
       try {
-        await addDoc(collection(db, "messages"), {
+        await push(ref(db, 'messages'), {
           text: message,
           sender: auth.currentUser.uid, // Assuming you have user authentication
           createdAt: serverTimestamp()
