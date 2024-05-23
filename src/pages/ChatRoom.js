@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { database } from '../firebase';
 import { ref, onValue, push } from 'firebase/database';
-import Message from './Message';
+import Message from './Message.tsx';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase'; 
 
