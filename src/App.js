@@ -4,7 +4,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import Home from './pages/Home';
 import SignInPage from './pages/SignInPage';
 import Dashboard from './pages/Dashboard';
-import ChatRoom from './pages/ChatRoom';
+import Chat from './pages/Chat';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/chat',
-    element: <ChatRoom />
+    element: <Chat />
   }
 ])
 
