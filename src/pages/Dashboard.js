@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [orderDirection, setOrderDirection] = useState("asc");
+  const [orderDirection, setOrderDirection] = useState("asc"); 
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -29,7 +29,7 @@ const Dashboard = () => {
       try {
         const messagesQuery = query(
           collection(db, "messages"),
-          orderBy("timestamp", "desc")
+          orderBy("timestamp", "desc") 
         );
         const querySnapshot = await getDocs(messagesQuery);
         const messagesArray = querySnapshot.docs.map((doc) => ({
@@ -50,7 +50,7 @@ const Dashboard = () => {
 
   const toggleRead = (messageId) => {
     const messageRef = doc(db, "messages", messageId);
-    updateDoc(messageRef, { read: true });
+    updateDoc(messageRef, { read: true }); 
 
     // No need to update the local state here as Firebase will update it in real-time
   };
@@ -76,7 +76,7 @@ const Dashboard = () => {
     setMessages((prevMessages) => {
       return prevMessages.sort((a, b) => {
         if (orderDirection === "asc") {
-          return a.timestamp - b.timestamp;
+          return a.timestamp - b.timestamp; 
         } else {
           return b.timestamp - a.timestamp;
         }
@@ -183,18 +183,16 @@ const Dashboard = () => {
                             message.timestamp.seconds * 1000
                           ).toLocaleString()}
                         </p>
-                        {!message.read ? (
-                          <button
-                            className="mt-2 px-4 py-2 rounded bg-blue-500 text-white"
-                            onClick={() => toggleRead(message.id)}
-                          >
-                            Mark as Read
-                          </button>
-                        ) : (
-                          <span className="mt-2 px-2 py-1 text-xs rounded bg-green-200 text-green-800">
-                            Read
-                          </span>
-                        )}
+                        <button
+                          className={`mt-2 px-4 py-2 rounded ${
+                            !message.read
+                              ? "bg-blue-500 text-white"
+                              : "bg-green-300 text-white"
+                          }`}
+                          onClick={() => toggleRead(message.id)}
+                        >
+                          {!message.read ? "Mark as Read" : "Read"}
+                        </button>
                       </div>
                     ))}
                   </div>
