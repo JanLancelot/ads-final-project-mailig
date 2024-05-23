@@ -7,8 +7,6 @@ import {
   getDocs,
   query,
   orderBy,
-  startAfter,
-  limit,
   onSnapshot,
 } from "firebase/firestore";
 
@@ -17,7 +15,7 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [orderDirection, setOrderDirection] = useState("desc"); // Initial order direction (descending)
+  const [orderDirection, setOrderDirection] = useState("asc");
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -31,7 +29,7 @@ const Dashboard = () => {
       try {
         const messagesQuery = query(
           collection(db, "messages"),
-          orderBy("timestamp", "desc") // Fetch in descending order
+          orderBy("timestamp", "desc")
         );
         const querySnapshot = await getDocs(messagesQuery);
         const messagesArray = querySnapshot.docs.map((doc) => ({
@@ -54,11 +52,7 @@ const Dashboard = () => {
     const messageRef = doc(db, "messages", messageId);
     updateDoc(messageRef, { read: true });
 
-    setMessages((prevMessages) =>
-      prevMessages.map((message) =>
-        message.id === messageId ? { ...message, read: true } : message
-      )
-    );
+    // No need to update the local state here as Firebase will update it in real-time
   };
 
   const filterMessages = () => {
@@ -74,23 +68,11 @@ const Dashboard = () => {
     return filteredMessages;
   };
 
-  const toggleUnread = (messageId) => {
-    const messageRef = doc(db, "messages", messageId);
-    updateDoc(messageRef, { read: false });
-
-    setMessages((prevMessages) =>
-      prevMessages.map((message) =>
-        message.id === messageId ? { ...message, read: false } : message
-      )
-    );
-  };
-
   const handleSortChange = () => {
     setOrderDirection((prevDirection) =>
       prevDirection === "asc" ? "desc" : "asc"
     );
 
-    // Sort the messages array in-place
     setMessages((prevMessages) => {
       return prevMessages.sort((a, b) => {
         if (orderDirection === "asc") {
@@ -201,16 +183,15 @@ const Dashboard = () => {
                             message.timestamp.seconds * 1000
                           ).toLocaleString()}
                         </p>
-                        <button
-                          className={`mt-2 px-4 py-2 rounded ${
-                            !message.read
-                              ? "bg-blue-500 text-white"
-                              : "bg-gray-300 text-gray-700"
+                        <span
+                          className={`mt-2 px-2 py-1 text-xs rounded ${
+                            message.read
+                              ? "bg-green-200 text-green-800"
+                              : "bg-blue-200 text-blue-800"
                           }`}
-                          onClick={() => toggleRead(message.id)}
                         >
-                          {!message.read ? "Mark as Read" : "Mark as Unread"}
-                        </button>
+                          {message.read ? "Read" : "Unread"}
+                        </span>
                       </div>
                     ))}
                   </div>
