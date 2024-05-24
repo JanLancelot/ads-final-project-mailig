@@ -168,42 +168,30 @@ const Home = () => {
           <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
             Featured Projects
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
-              <CardContainer key={project.title} className="inter-var m-12">
-                <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border">
-                  <CardItem translateZ="100" className="w-full mt-4">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-                    />
-                  </CardItem>
-                  <CardItem
-                    translateZ="50"
-                    className="text-xl font-bold text-neutral-600 dark:text-white mt-4"
-                  >
+              <div
+                key={project.title}
+                className="bg-white rounded-lg overflow-hidden shadow-md"
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold mb-2">
                     {project.title}
-                  </CardItem>
-                  <CardItem
-                    as="p"
-                    translateZ="60"
-                    className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                  </h3>
+                  <p className="text-gray-600 mb-4">{project.description}</p>
+                  <Link
+                    to={project.link}
+                    className="text-yellow-500 hover:text-yellow-600"
                   >
-                    {project.description}
-                  </CardItem>
-                  <div className="flex justify-between items-center mt-4">
-                    <CardItem
-                      translateZ={20}
-                      as={Link}
-                      to={project.link}
-                      className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white text-yellow-500 hover:text-yellow-600"
-                    >
-                      Learn More
-                    </CardItem>
-                  </div>
-                </CardBody>
-              </CardContainer>
+                    Learn More
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
