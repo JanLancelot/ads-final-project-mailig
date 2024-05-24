@@ -104,7 +104,7 @@ const Dashboard = () => {
   };
 
   const filterMessages = (archived) => {
-    return messages.filter(
+    const filteredMessages = messages.filter(
       (message) =>
         message.archived === archived &&
         (searchQuery === "" ||
@@ -112,6 +112,14 @@ const Dashboard = () => {
           message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
           message.message.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+
+    const readMessages = filteredMessages.filter((message) => message.read);
+    const unreadMessages = filteredMessages.filter((message) => !message.read);
+
+    console.log("Read Messages:", readMessages);
+    console.log("Unread Messages:", unreadMessages);
+
+    return filteredMessages;
   };
 
   const handleSortChange = () => {
@@ -222,76 +230,92 @@ const Dashboard = () => {
                 </div>
                 {filterMessages(false).length > 0 ? (
                   <>
-                    <h3 className="text-lg font-semibold mb-2">Unread Messages</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Unread Messages
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                      {filterMessages(false).filter((message) => !message.read).map((message) => (
-                        <div
-                          key={message.id}
-                          className={`bg-white shadow-md rounded-md p-4 ${
-                            !message.read ? "border-l-4 border-blue-500" : ""
-                          }`}
-                        >
-                          <h3 className="text-lg font-bold">{message.name}</h3>
-                          <p className="text-gray-600">{message.email}</p>
-                          <p className="mt-2">{message.message}</p>
-                          <p className="text-gray-500">
-                            {new Date(message.timestamp.seconds * 1000).toLocaleString()}
-                          </p>
-                          <div className="mt-2 flex space-x-2">
-                            <button
-                              className="px-4 py-2 rounded bg-blue-500 text-white"
-                              onClick={() => toggleRead(message.id)}
-                            >
-                              Mark as Read
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-red-500 text-white"
-                              onClick={() => deleteMessage(message.id)}
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-yellow-500 text-white"
-                              onClick={() => archiveMessage(message.id)}
-                            >
-                              Archive
-                            </button>
+                      {filterMessages(false)
+                        .filter((message) => !message.read)
+                        .map((message) => (
+                          <div
+                            key={message.id}
+                            className={`bg-white shadow-md rounded-md p-4 ${
+                              !message.read ? "border-l-4 border-blue-500" : ""
+                            }`}
+                          >
+                            <h3 className="text-lg font-bold">
+                              {message.name}
+                            </h3>
+                            <p className="text-gray-600">{message.email}</p>
+                            <p className="mt-2">{message.message}</p>
+                            <p className="text-gray-500">
+                              {new Date(
+                                message.timestamp.seconds * 1000
+                              ).toLocaleString()}
+                            </p>
+                            <div className="mt-2 flex space-x-2">
+                              <button
+                                className="px-4 py-2 rounded bg-blue-500 text-white"
+                                onClick={() => toggleRead(message.id)}
+                              >
+                                Mark as Read
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-red-500 text-white"
+                                onClick={() => deleteMessage(message.id)}
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-yellow-500 text-white"
+                                onClick={() => archiveMessage(message.id)}
+                              >
+                                Archive
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">Read Messages</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Read Messages
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                      {filterMessages(false).filter((message) => message.read).map((message) => (
-                        <div
-                          key={message.id}
-                          className="bg-white shadow-md rounded-md p-4"
-                        >
-                          <h3 className="text-lg font-bold">{message.name}</h3>
-                          <p className="text-gray-600">{message.email}</p>
-                          <p className="mt-2">{message.message}</p>
-                          <p className="text-gray-500">
-                            {new Date(message.timestamp.seconds * 1000).toLocaleString()}
-                          </p>
-                          <div className="mt-2 flex space-x-2">
-                            <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
-                              Read
-                            </span>
-                            <button
-                              className="px-4 py-2 rounded bg-red-500 text-white"
-                              onClick={() => deleteMessage(message.id)}
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-yellow-500 text-white"
-                              onClick={() => archiveMessage(message.id)}
-                            >
-                              Archive
-                            </button>
+                      {filterMessages(false)
+                        .filter((message) => message.read)
+                        .map((message) => (
+                          <div
+                            key={message.id}
+                            className="bg-white shadow-md rounded-md p-4"
+                          >
+                            <h3 className="text-lg font-bold">
+                              {message.name}
+                            </h3>
+                            <p className="text-gray-600">{message.email}</p>
+                            <p className="mt-2">{message.message}</p>
+                            <p className="text-gray-500">
+                              {new Date(
+                                message.timestamp.seconds * 1000
+                              ).toLocaleString()}
+                            </p>
+                            <div className="mt-2 flex space-x-2">
+                              <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                                Read
+                              </span>
+                              <button
+                                className="px-4 py-2 rounded bg-red-500 text-white"
+                                onClick={() => deleteMessage(message.id)}
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-yellow-500 text-white"
+                                onClick={() => archiveMessage(message.id)}
+                              >
+                                Archive
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </>
                 ) : (
@@ -313,7 +337,9 @@ const Dashboard = () => {
                         <p className="text-gray-600">{message.email}</p>
                         <p className="mt-2">{message.message}</p>
                         <p className="text-gray-500">
-                          {new Date(message.timestamp.seconds * 1000).toLocaleString()}
+                          {new Date(
+                            message.timestamp.seconds * 1000
+                          ).toLocaleString()}
                         </p>
                         <div className="mt-2 flex space-x-2">
                           <button
