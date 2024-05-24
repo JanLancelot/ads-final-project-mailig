@@ -96,8 +96,8 @@ const Home = () => {
         className="h-[60rem] w-full flex md:items-center md:justify-center bg-black/[0.96] relative overflow-hidden"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(to right, transparent 0 calc(50% - 1px), rgba(255, 255, 255, 0.08) calc(50%) calc(50% + 1px), transparent calc(50% + 1px) 100%), repeating-linear-gradient(to bottom, transparent 0 calc(50% - 1px), rgba(255, 255, 255, 0.08) calc(50%) calc(50% + 1px), transparent calc(50% + 1px) 100%)",
-          backgroundSize: "10px 10px",
+            "repeating-linear-gradient(to right, transparent 0 calc(50% - 2px), rgba(255, 255, 255, 0.04) calc(50%) calc(50% + 2px), transparent calc(50% + 2px) 100%), repeating-linear-gradient(to bottom, transparent 0 calc(50% - 2px), rgba(255, 255, 255, 0.04) calc(50%) calc(50% + 2px), transparent calc(50% + 2px) 100%)",
+          backgroundSize: "20px 20px",
         }}
       >
         {" "}
