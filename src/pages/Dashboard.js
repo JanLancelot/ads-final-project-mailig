@@ -113,9 +113,11 @@ const Dashboard = () => {
           message.message.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
+    const allMessages = filteredMessages;
     const readMessages = filteredMessages.filter((message) => message.read);
     const unreadMessages = filteredMessages.filter((message) => !message.read);
 
+    console.log("All Messages:", allMessages);
     console.log("Read Messages:", readMessages);
     console.log("Unread Messages:", unreadMessages);
 
