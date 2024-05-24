@@ -11,6 +11,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import lancelot from '../images/lancelot.png';
 
 const Home = () => {
   const [formData, setFormData] = useState({
@@ -149,7 +150,7 @@ const Home = () => {
             </div>
             <div className="md:w-1/2">
               <img
-                src="../images/lancelot"
+                src={lancelot}
                 alt="Lancelot's Portrait"
                 className="rounded-full shadow-lg max-w-xs mx-auto"
               />
