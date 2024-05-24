@@ -11,7 +11,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import lancelot from '../images/lancelot.png';
+import lancelot from "../images/lancelot.png";
 
 const Home = () => {
   const [formData, setFormData] = useState({
@@ -116,8 +116,12 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
+      <div className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 relative min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 flex justify-center items-center">
+          <div className="w-64 h-64 rounded-full bg-purple-600 opacity-20 blur-lg animate-pulse"></div>
+          <div className="w-48 h-48 rounded-full bg-yellow-400 opacity-30 blur-lg animate-pulse"></div>
+        </div>
+        <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-center">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
@@ -152,7 +156,7 @@ const Home = () => {
               <img
                 src={lancelot}
                 alt="Lancelot's Portrait"
-                className="rounded-full shadow-lg max-w-xs mx-auto"
+                className="rounded-full shadow-lg max-w-md mx-auto"
               />
             </div>
           </div>
