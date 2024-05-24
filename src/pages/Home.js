@@ -5,9 +5,6 @@ import ChatWindow from '../components/ChatWindow'
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
 const Home = () => {
   const [formData, setFormData] = useState({
     name: "",

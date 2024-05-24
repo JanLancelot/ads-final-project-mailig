@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   updateDoc,
+  deleteDoc,
   getDocs,
   query,
   orderBy,
@@ -79,15 +80,44 @@ const Dashboard = () => {
     setUnreadCount(0);
   };
 
+  const deleteMessage = async (messageId) => {
+    const messageRef = doc(db, "messages", messageId);
+    await deleteDoc(messageRef);
+
+    // Update the local state to reflect the change
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== messageId)
+    );
+    setTotalMessages((prevTotal) => prevTotal - 1);
+    setUnreadCount((prevUnreadCount) =>
+      messages.find((message) => message.id === messageId && !message.read)
+        ? prevUnreadCount - 1
+        : prevUnreadCount
+    );
+  };
+
+  const archiveMessage = async (messageId) => {
+    const messageRef = doc(db, "messages", messageId);
+    await updateDoc(messageRef, { archived: true });
+
+    // Update the local state to reflect the change
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId ? { ...message, archived: true } : message
+      )
+    );
+  };
+
   const filterMessages = () => {
     if (searchQuery === "") {
-      return messages;
+      return messages.filter((message) => !message.archived);
     }
     const filteredMessages = messages.filter(
       (message) =>
-        message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        message.message.toLowerCase().includes(searchQuery.toLowerCase())
+        !message.archived &&
+        (message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          message.message.toLowerCase().includes(searchQuery.toLowerCase()))
     );
     return filteredMessages;
   };
@@ -207,18 +237,34 @@ const Dashboard = () => {
                             message.timestamp.seconds * 1000
                           ).toLocaleString()}
                         </p>
-                        {!message.read ? (
+                        <div className="mt-2 flex space-x-2">
+                          {!message.read ? (
+                            <button
+                              className="px-4 py-2 rounded bg-blue-500 text-white"
+                              onClick={() => toggleRead(message.id)}
+                            >
+                              Mark as Read
+                            </button>
+                          ) : (
+                            <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                              Read
+                            </span>
+                          )}
                           <button
-                            className="mt-2 px-4 py-2 rounded bg-blue-500 text-white"
-                            onClick={() => toggleRead(message.id)}
+                            className="px-4 py-2 rounded bg-red-500 text-white"
+                            onClick={() => deleteMessage(message.id)}
                           >
-                            Mark as Read
+                            Delete
                           </button>
-                        ) : (
-                          <span className="mt-2 px-2 py-1 text-xs rounded bg-green-200 text-green-800">
-                            Read
-                          </span>
-                        )}
+                          {!message.archived && (
+                            <button
+                              className="px-4 py-2 rounded bg-yellow-500 text-white"
+                              onClick={() => archiveMessage(message.id)}
+                            >
+                              Archive
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -239,6 +285,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
 
 export default Dashboard;
