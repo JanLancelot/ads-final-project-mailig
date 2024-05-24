@@ -9,7 +9,13 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { motion } from "framer-motion";
-import { ArrowRightIcon, StarIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  StarIcon,
+} from "@heroicons/react/24/outline";
+import {
+  StarIcon as StarIconSolid,
+} from "@heroicons/react/24/solid";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -214,14 +220,19 @@ const Projects = () => {
               >
                 Edit
               </button>
-              <button
+              <motion.button
                 onClick={() => toggleFeatured(project)}
                 className={`px-4 py-2 rounded-lg ${
-                  project.featured ? "bg-red-500" : "bg-green-500"
-                } text-white`}
+                  project.featured ? "bg-yellow-400" : "bg-gray-300"
+                } text-white flex items-center justify-center`}
+                whileTap={{ scale: 0.9 }}
               >
-                <StarIcon className="w-5 h-5" />
-              </button>
+                {project.featured ? (
+                  <StarIconSolid className="w-5 h-5 text-yellow-600" />
+                ) : (
+                  <StarIcon className="w-5 h-5 text-gray-600" />
+                )}
+              </motion.button>
             </div>
           </motion.div>
         ))}
