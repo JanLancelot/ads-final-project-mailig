@@ -149,7 +149,7 @@ const Home = () => {
             </div>
             <div className="md:w-1/2">
               <img
-                src="../images/lancelot.png"
+                src="../images/lancelot"
                 alt="Lancelot's Portrait"
                 className="rounded-full shadow-lg max-w-xs mx-auto"
               />
