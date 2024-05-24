@@ -156,9 +156,9 @@ const Dashboard = () => {
       </button>
       {/* Sidebar */}
       <div
-        className={`${
+        className={`bg-gray-800 text-gray-100 w-64 p-4 md:block ${
           showSidebar ? "block" : "hidden"
-        } bg-gray-800 text-gray-100 w-64 p-4 md:block`}
+        } sticky top-0`}
       >
         <div className="mb-4">
           <h2 className="text-xl font-bold">Dashboard</h2>
