@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { motion } from "framer-motion";
+import { cn } from "../utils/cn";
+import { Spotlight } from "../components/Spotlight";
 
 import lancelot from "../images/lancelot.png";
 
@@ -91,9 +93,13 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="h-[40rem] w-full rounded-md flex md:items-center md:justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex flex-col md:flex-row items-center justify-center">
+            <Spotlight
+              className="-top-40 left-0 md:left-60 md:-top-20"
+              fill="white"
+            />
             <motion.div
               className="md:w-1/2 mb-8 md:mb-0"
               initial={{ opacity: 0, x: -100 }}
@@ -265,7 +271,6 @@ const Home = () => {
           )}
         </div>
       </section>
-
     </Layout>
   );
 };
