@@ -225,13 +225,13 @@ const Projects = () => {
                 {/* Added flex container */}
                 <button
                   onClick={() => startEditing(project)}
-                  className="px-2 py-1 bg-yellow-500 text-white rounded-full mr-2" // Added margin-right
+                  className="px-2 py-1 bg-yellow-500 text-white rounded-full mr-2"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => deleteProject(project.id)}
-                  className="px-2 py-1 bg-red-700 text-white rounded-full ml-2" // Added margin-left
+                  className="px-2 py-1 bg-red-700 text-white rounded-full mr-2"
                 >
                   Delete
                 </button>
