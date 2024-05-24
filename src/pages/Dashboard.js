@@ -111,43 +111,21 @@ const Dashboard = () => {
     );
   };
 
-  // const fetchArchivedMessages = async () => {
-  //   try {
-  //     const archivedMessagesQuery = query(
-  //       collection(db, "messages"),
-  //       where("archived", "==", true),
-  //       orderBy("timestamp", "desc")
-  //     );
-  //     const archivedQuerySnapshot = await getDocs(archivedMessagesQuery);
-  //     const archivedMessagesArray = archivedQuerySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setArchivedMessages(archivedMessagesArray);
-  //   } catch (error) {
-  //     console.error("Error fetching archived messages: ", error);
-  //   }
-  // };
-
-  const filterArchivedMessages = () => {
-    const filteredArchivedMessages = messages.filter(
-      (message) =>
-        message.archived === true &&
-        (searchQuery === "" ||
-          message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          message.message.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-
-    const allMessages = filteredArchivedMessages;
-    const readMessages = filteredArchivedMessages.filter((message) => message.read);
-    const unreadMessages = filteredArchivedMessages.filter((message) => !message.read);
-
-    console.log("All Messages:", allMessages);
-    console.log("Read Messages:", readMessages);
-    console.log("Unread Messages:", unreadMessages);
-
-    return filteredArchivedMessages;
+  const fetchArchivedMessages = async () => {
+    try {
+      const archivedMessagesQuery = query(
+        collection(db, "messages"),
+        where("archived", "==", true)
+      );
+      const archivedQuerySnapshot = await getDocs(archivedMessagesQuery);
+      const archivedMessagesArray = archivedQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setArchivedMessages(archivedMessagesArray);
+    } catch (error) {
+      console.error("Error fetching archived messages: ", error);
+    }
   };
 
   const filterMessages = () => {
@@ -375,9 +353,9 @@ const Dashboard = () => {
             {activeTab === "archived" && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Archived Messages</h2>
-                {filterArchivedMessages.length > 0 ? (
+                {archivedMessages.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {filterArchivedMessages.map((message) => (
+                    {archivedMessages.map((message) => (
                       <div
                         key={message.id}
                         className="bg-white shadow-md rounded-md p-4"
