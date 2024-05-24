@@ -92,7 +92,15 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <div className="h-[60rem] w-full flex md:items-center md:justify-center bg-black/[0.96] antialiased bg-grid-white/[0.08] relative overflow-hidden">
+      <div
+        className="h-[60rem] w-full flex md:items-center md:justify-center bg-black/[0.96] relative overflow-hidden"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(to right, transparent 0 calc(50% - 1px), rgba(255, 255, 255, 0.08) calc(50%) calc(50% + 1px), transparent calc(50% + 1px) 100%), repeating-linear-gradient(to bottom, transparent 0 calc(50% - 1px), rgba(255, 255, 255, 0.08) calc(50%) calc(50% + 1px), transparent calc(50% + 1px) 100%)",
+          backgroundSize: "10px 10px",
+        }}
+      >
+        {" "}
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex flex-col md:flex-row items-center justify-center">
             <Spotlight
