@@ -13,6 +13,7 @@ import {
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import Projects from "../components/Projects";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("messages");
@@ -172,7 +173,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -225,9 +226,18 @@ const Dashboard = () => {
             className={`block py-2 px-4 rounded ${
               activeTab === "content" ? "bg-gray-700" : ""
             }`}
-            onClick={() => setActiveTab("content")}
+            onClick={() => setActiveTab("projects")}
           >
-            Content
+            Manage Projects
+          </a>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "content" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("about")}
+          >
+            Manage About
           </a>
           <button
             className="block py-2 px-4 rounded text-left hover:bg-gray-700"
@@ -403,9 +413,15 @@ const Dashboard = () => {
                 )}
               </div>
             )}
-            {activeTab === "content" && (
+            {activeTab === "projects" && (
               <div>
-                <h2 className="text-xl font-bold mb-4">Content</h2>
+                <h2 className="text-xl font-bold mb-4">Manage Projects</h2>
+                <Projects />
+              </div>
+            )}
+            {activeTab === "about" && (
+              <div>
+                <h2 className="text-xl font-bold mb-4">Manage About</h2>
                 {/* Add your content tab logic here */}
               </div>
             )}
