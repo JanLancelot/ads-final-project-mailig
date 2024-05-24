@@ -10,6 +10,8 @@ import {
   orderBy,
   where,
 } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -167,9 +169,13 @@ const Dashboard = () => {
     });
   };
 
-  const handleLogout = () => {
-    // Add your logout logic here (e.g., clearing user session, etc.)
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/"); 
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (
