@@ -214,10 +214,12 @@ const Projects = () => {
               >
                 View Project <ArrowRightIcon className="inline h-5 w-5" />
               </a>
-              <div className="flex justify-between mt-4">
+              <div className="flex mt-4">
+                {" "}
+                {/* Added flex container */}
                 <button
                   onClick={() => startEditing(project)}
-                  className="px-2 py-1 bg-yellow-500 text-white rounded-full"
+                  className="px-2 py-1 bg-yellow-500 text-white rounded-full mr-2" // Added margin-right
                 >
                   Edit
                 </button>
