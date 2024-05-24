@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { db, collection, getDocs, addDoc, updateDoc, doc } from "../firebase";
+import { db } from "../firebase";
+import {
+    collection,
+    doc,
+    addDoc,
+    updateDoc,
+    getDocs,
+  } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import Modal from "./Modal";
