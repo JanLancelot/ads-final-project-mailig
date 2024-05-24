@@ -5,8 +5,8 @@ import {
   doc,
   addDoc,
   updateDoc,
-  getDocs,
   deleteDoc,
+  getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { motion } from "framer-motion";
@@ -47,6 +47,11 @@ const Projects = () => {
     if (file) {
       setCurrentProject({ ...currentProject, image: file });
     }
+  };
+
+  const deleteProject = async (id) => {
+    await deleteDoc(doc(db, "projects", id));
+    setProjects(projects.filter((project) => project.id !== id));
   };
 
   const handleSubmit = async (e) => {
@@ -118,123 +123,133 @@ const Projects = () => {
     );
   };
 
-  const deleteProject = async (id) => {
-    await deleteDoc(doc(db, "projects", id));
-    setProjects(projects.filter((project) => project.id !== id));
-  };
-
   return (
     <div className="container mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-center mb-8">Projects</h1>
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={startAdding}
-          className="px-4 py-2 bg-blue-700 text-white rounded-full"
-        >
-          Add Project
-        </button>
-      </div>
-      {showForm && (
+      <h1 className="text-4xl font-bold text-center mb-12">My Projects</h1>
+      <button
+        onClick={startAdding}
+        className="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg"
+      >
+        Add Project
+      </button>
+      {showForm ? (
         <form onSubmit={handleSubmit} className="mb-8">
-          <input
-            type="text"
-            name="title"
-            value={currentProject.title}
-            onChange={handleInputChange}
-            placeholder="Title"
-            className="block w-full mb-2 p-2 border"
-          />
-          <textarea
-            name="description"
-            value={currentProject.description}
-            onChange={handleInputChange}
-            placeholder="Description"
-            className="block w-full mb-2 p-2 border"
-          />
-          <input
-            type="text"
-            name="link"
-            value={currentProject.link}
-            onChange={handleInputChange}
-            placeholder="Link"
-            className="block w-full mb-2 p-2 border"
-          />
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="block w-full mb-2 p-2 border"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-green-700 text-white rounded-full"
-          >
-            {isEditing ? "Update" : "Add"} Project
-          </button>
-          <button
-            onClick={resetForm}
-            type="button"
-            className="px-4 py-2 bg-gray-700 text-white rounded-full ml-2"
-          >
-            Cancel
-          </button>
+          <h2 className="text-2xl font-bold mb-4">
+            {isEditing ? "Edit Project" : "Add Project"}
+          </h2>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={currentProject.title}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Description</label>
+            <textarea
+              name="description"
+              value={currentProject.description}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Link</label>
+            <input
+              type="url"
+              name="link"
+              value={currentProject.link}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full px-3 py-2 border rounded-lg"
+            />
+          </div>
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+            >
+              {isEditing ? "Update Project" : "Add Project"}
+            </button>
+          </div>
         </form>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projects.map((project) => (
-          <motion.div
-            key={project.id}
-            className="bg-white rounded-lg shadow-lg p-6"
-            whileHover={{ scale: 1.05 }}
-          >
-            {project.image && (
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-48 object-cover mb-4 rounded-lg"
-              />
-            )}
-            <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
-            <p className="text-gray-700 mb-4">{project.description}</p>
-            {project.link && (
+      ) : null}
+      {!showForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
+            <motion.div
+              key={project.id}
+              className="bg-white p-6 rounded-lg shadow-md relative"
+              whileHover={{ scale: 1.05 }}
+            >
+              <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
+              <p className="text-gray-700 mb-4">{project.description}</p>
+              {project.image && (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover mb-4 rounded-lg"
+                />
+              )}
               <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-blue-700 hover:underline"
+                className="text-blue-500 hover:underline"
               >
-                View Project <ArrowRightIcon className="w-4 h-4 ml-1" />
+                View Project <ArrowRightIcon className="inline h-5 w-5" />
               </a>
-            )}
-            <div className="flex items-center mt-4">
-              <button
-                onClick={() => startEditing(project)}
-                className="px-2 py-1 bg-yellow-700 text-white rounded-full"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => deleteProject(project.id)}
-                className="px-2 py-1 bg-red-700 text-white rounded-full ml-2"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => toggleFeatured(project)}
-                className={`px-2 py-1 ml-2 ${
-                  project.featured ? "bg-yellow-400" : "bg-gray-400"
-                } text-white rounded-full`}
-              >
-                {project.featured ? (
-                  <StarIconSolid className="w-4 h-4" />
-                ) : (
-                  <StarIcon className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+              <div className="flex mt-4">
+                {" "}
+                {/* Added flex container */}
+                <button
+                  onClick={() => startEditing(project)}
+                  className="px-2 py-1 bg-yellow-500 text-white rounded-full mr-2" // Added margin-right
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteProject(project.id)}
+                  className="px-2 py-1 bg-red-700 text-white rounded-full ml-2" // Added margin-left
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => toggleFeatured(project)}
+                  className="px-2 py-1 bg-red-500 text-white rounded-full"
+                >
+                  {project.featured ? (
+                    <StarIconSolid className="h-5 w-5" />
+                  ) : (
+                    <StarIcon className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
