@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   orderBy,
+  where,
 } from "firebase/firestore";
 
 const Dashboard = () => {
@@ -18,11 +19,18 @@ const Dashboard = () => {
   const [orderDirection, setOrderDirection] = useState("asc");
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [archivedMessages, setArchivedMessages] = useState([]);
   const [showSidebar, setShowSidebar] = useState(false);
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
+
+  useEffect(() => {
+    if (activeTab === "archived") {
+      fetchArchivedMessages();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -101,6 +109,24 @@ const Dashboard = () => {
         message.id === messageId ? { ...message, archived: true } : message
       )
     );
+  };
+
+  const fetchArchivedMessages = async () => {
+    try {
+      const archivedMessagesQuery = query(
+        collection(db, "messages"),
+        where("archived", "==", true),
+        orderBy("timestamp", "desc")
+      );
+      const archivedQuerySnapshot = await getDocs(archivedMessagesQuery);
+      const archivedMessagesArray = archivedQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setArchivedMessages(archivedMessagesArray);
+    } catch (error) {
+      console.error("Error fetching archived messages: ", error);
+    }
   };
 
   const filterMessages = () => {
@@ -328,9 +354,9 @@ const Dashboard = () => {
             {activeTab === "archived" && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Archived Messages</h2>
-                {filterMessages(true).length > 0 ? (
+                {archivedMessages.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {filterMessages(true).map((message) => (
+                    {archivedMessages.map((message) => (
                       <div
                         key={message.id}
                         className="bg-white shadow-md rounded-md p-4"
