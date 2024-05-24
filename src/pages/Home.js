@@ -11,6 +11,8 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import { motion } from "framer-motion";
+
 import lancelot from "../images/lancelot.png";
 
 const Home = () => {
@@ -116,79 +118,60 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 relative min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 flex justify-center items-center">
-          <div className="w-64 h-64 rounded-full bg-purple-600 opacity-20 blur-lg animate-pulse"></div>
-          <div className="w-48 h-48 rounded-full bg-yellow-400 opacity-30 blur-lg animate-pulse"></div>
-        </div>
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-center">
-            <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-                Welcome to <span className="text-yellow-400">Lancelot</span>'s
-                Portfolio
-              </h1>
-              <p className="mt-3 text-gray-300 sm:mt-5 sm:text-lg sm:max-w-xl mx-auto md:mt-5 md:text-xl">
-                I'm a passionate web developer specializing in React, Firebase,
-                and Tailwind CSS. Explore my projects, skills, and get in touch
-                to discuss potential collaborations.
-              </p>
-              <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row sm:justify-center space-y-3 sm:space-y-0 sm:space-x-3">
-                <div className="rounded-md shadow">
-                  <a
-                    href="#projects"
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 md:py-4 md:text-lg md:px-10"
-                  >
-                    View Projects
-                  </a>
-                </div>
-                <div className="rounded-md shadow relative">
-                  <a
-                    href="#contact"
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-yellow-400 hover:bg-yellow-500 md:py-4 md:text-lg md:px-10"
-                  >
-                    Get in Touch
-                  </a>
-                </div>
+      <div className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto text-center">
+        <div className="flex flex-col md:flex-row items-center justify-center">
+          <motion.div
+            className="md:w-1/2 mb-8 md:mb-0"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
+              Welcome to <span className="text-yellow-400">Lancelot</span>'s Portfolio
+            </h1>
+            <p className="mt-3 text-gray-300 sm:mt-5 sm:text-lg sm:max-w-xl mx-auto md:mt-5 md:text-xl">
+              I'm a passionate web developer specializing in React, Firebase, and Tailwind CSS. Explore my projects, skills, and get in touch to discuss potential collaborations.
+            </p>
+            <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row sm:justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+              <div className="rounded-md shadow">
+                <a
+                  href="#projects"
+                  className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 transition duration-300 md:py-4 md:text-lg md:px-10"
+                >
+                  View Projects
+                </a>
+              </div>
+              <div className="rounded-md shadow relative">
+                <a
+                  href="#contact"
+                  className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-yellow-400 hover:bg-yellow-500 transition duration-300 md:py-4 md:text-lg md:px-10"
+                >
+                  Get in Touch
+                  {unreadCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white rounded-full px-2 py-1 text-sm">
+                      {unreadCount}
+                    </span>
+                  )}
+                </a>
               </div>
             </div>
-            <div className="md:w-1/2">
-              <img
-                src={lancelot}
-                alt="Lancelot's Portrait"
-                className="rounded-full shadow-lg max-w-md mx-auto"
-              />
-            </div>
-          </div>
+          </motion.div>
+          <motion.div
+            className="md:w-1/2"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <img
+              src={lancelot}
+              alt="Lancelot's Portrait"
+              className="rounded-full shadow-lg max-w-md mx-auto"
+            />
+          </motion.div>
         </div>
       </div>
-
-      {/* Client Logos Section */}
-      <div className="bg-blue-950 py-2">
-        <div
-          ref={logosContainerRef}
-          className="flex whitespace-nowrap space-x-4 overflow-hidden"
-        >
-          <div ref={logosRef} className="flex">
-            <img
-              src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png"
-              alt="Client 1"
-              className="h-12 w-auto"
-            />
-            <img
-              src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png"
-              alt="Client 2"
-              className="h-12 w-auto"
-            />
-            <img
-              src="https://wro.innofabrik.de/wp-content/uploads/2021/08/logo-with-wordmark.png"
-              alt="Client 3"
-              className="h-12 w-auto"
-            />
-          </div>
-        </div>
-      </div>
-
+    </div>
       {/* Featured Projects Section */}
       <section id="projects" className="py-12 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
