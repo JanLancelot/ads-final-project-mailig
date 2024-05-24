@@ -10,7 +10,6 @@ import {
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { motion } from "framer-motion";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import Layout from "./Layout";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -104,7 +103,6 @@ const Projects = () => {
   };
 
   return (
-    <Layout>
       <div className="container mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-center mb-12">My Projects</h1>
         <button
@@ -212,7 +210,6 @@ const Projects = () => {
           </div>
         )}
       </div>
-    </Layout>
   );
 };
 
