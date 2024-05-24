@@ -214,22 +214,24 @@ const Projects = () => {
               >
                 View Project <ArrowRightIcon className="inline h-5 w-5" />
               </a>
-              <button
-                onClick={() => startEditing(project)}
-                className="absolute top-4 right-4 px-2 py-1 bg-yellow-500 text-white rounded-full"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => toggleFeatured(project)}
-                className="absolute top-4 left-4 px-2 py-1 bg-red-500 text-white rounded-full"
-              >
-                {project.featured ? (
-                  <StarIconSolid className="h-5 w-5" />
-                ) : (
-                  <StarIcon className="h-5 w-5" />
-                )}
-              </button>
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => startEditing(project)}
+                  className="px-2 py-1 bg-yellow-500 text-white rounded-full"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => toggleFeatured(project)}
+                  className="px-2 py-1 bg-red-500 text-white rounded-full"
+                >
+                  {project.featured ? (
+                    <StarIconSolid className="h-5 w-5" />
+                  ) : (
+                    <StarIcon className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>
