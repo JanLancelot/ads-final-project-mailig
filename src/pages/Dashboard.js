@@ -17,11 +17,8 @@ const navigation = [
   {
     name: "Messages",
     icon: InboxIcon,
-    current: false,
-    children: [
-      { name: "All Messages", href: "#messages" },
-      { name: "Archived", href: "#archived" },
-    ],
+    current: true,
+    children: [{ name: "Archived", href: "#archived" }],
   },
   {
     name: "Content",
@@ -123,15 +120,24 @@ const Dashboard = () => {
     );
   };
 
-  const filterMessages = (archivedFilter = false) => {
-    return messages.filter(
+  const filterMessages = () => {
+    const filteredMessages = messages.filter(
       (message) =>
-        message.archived === archivedFilter &&
+        (!message.archived || message.archived === false) &&
         (searchQuery === "" ||
           message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
           message.message.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+    const allMessages = filteredMessages;
+    const readMessages = filteredMessages.filter((message) => message.read);
+    const unreadMessages = filteredMessages.filter((message) => !message.read);
+
+    console.log("All Messages:", allMessages);
+    console.log("Read Messages:", readMessages);
+    console.log("Unread Messages:", unreadMessages);
+    
+    return filteredMessages;
   };
 
   const handleSortChange = () => {
