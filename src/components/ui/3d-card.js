@@ -6,9 +6,7 @@ import React, {
   useEffect,
 } from "react";
 
-// Assuming cn is a utility function for conditionally joining classNames.
-// You can use a library like classnames for this purpose.
-import { cn } from "@/utils/cn"; // Adjust this path as necessary
+import { cn } from "../../utils/cn";
 
 const MouseEnterContext = createContext(undefined);
 
