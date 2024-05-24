@@ -10,6 +10,7 @@ import {
   orderBy,
   where,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("messages");
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [archivedMessages, setArchivedMessages] = useState([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -165,6 +167,11 @@ const Dashboard = () => {
     });
   };
 
+  const handleLogout = () => {
+    // Add your logout logic here (e.g., clearing user session, etc.)
+    navigate("/");
+  };
+
   return (
     <div className="flex h-screen">
       <button
@@ -216,6 +223,12 @@ const Dashboard = () => {
           >
             Content
           </a>
+          <button
+            className="block py-2 px-4 rounded text-left hover:bg-gray-700"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </nav>
       </div>
       {/* Main Content */}
