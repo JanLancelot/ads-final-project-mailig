@@ -188,7 +188,7 @@ const Home = () => {
                     to={project.link}
                     className="text-yellow-500 hover:text-yellow-600"
                   >
-                    Learn More
+                    View Website
                   </Link>
                 </div>
               </div>
