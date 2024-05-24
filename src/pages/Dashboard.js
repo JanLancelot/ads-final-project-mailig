@@ -161,7 +161,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="">
       {/* Sidebar */}
       <div className="flex grow-0 flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 w-72">
         <div className="flex h-16 shrink-0 items-center">
@@ -261,7 +261,7 @@ const Dashboard = () => {
 
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
         {/* Main Content Area */}
-        <div className="flex-1 p-6">
+        <div className="">
           {activeTab === "messages" && (
             <div>
               <h2 className="text-xl font-bold mb-4">Messages</h2>
