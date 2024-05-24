@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from "firebase/firestore";
 import { motion } from 'framer-motion';
-import { ArrowRightIcon } from '@heroicons/react/outline';
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);

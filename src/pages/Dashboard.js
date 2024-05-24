@@ -224,7 +224,7 @@ const Dashboard = () => {
           <a
             href="#"
             className={`block py-2 px-4 rounded ${
-              activeTab === "content" ? "bg-gray-700" : ""
+              activeTab === "projects" ? "bg-gray-700" : ""
             }`}
             onClick={() => setActiveTab("projects")}
           >
@@ -233,7 +233,7 @@ const Dashboard = () => {
           <a
             href="#"
             className={`block py-2 px-4 rounded ${
-              activeTab === "content" ? "bg-gray-700" : ""
+              activeTab === "about" ? "bg-gray-700" : ""
             }`}
             onClick={() => setActiveTab("about")}
           >
