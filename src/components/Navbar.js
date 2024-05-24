@@ -32,12 +32,6 @@ const Navbar = () => {
                 >
                   Projects
                 </Link>
-                <Link
-                  to="/contact"
-                  className="text-gray-300 hover:bg-blue-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Contact
-                </Link>
               </div>
             </div>
           </div>

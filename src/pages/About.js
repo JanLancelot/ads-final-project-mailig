@@ -35,10 +35,7 @@ const AboutMe = () => {
                 About Me
               </h2>
               <p className="mt-4 text-gray-700 sm:mt-6 sm:text-lg md:text-xl">
-                Hi, my name is Jan Lancelot P. Mailig, and I am passionate web developer
-                specializing in React, Firebase, and Tailwind. I've been doing this for four year now,
-                but my passion for learning hasn't waned. I'm also knowledgeable in Lego Robotics, and have represented
-                the Philippines twice in the World Robot Olympiad.
+              Hi, my name is Jan Lancelot P. Mailig, and I am a passionate web developer specializing in React, Firebase, and Tailwind. I've been doing this for four years now, but my passion for learning hasn't waned. I'm also knowledgeable in Lego Robotics and have represented the Philippines twice in the World Robot Olympiad.
               </p>
               <h3 className="mt-6 text-2xl font-bold text-gray-800">Skills</h3>
               <ul className="mt-3 text-gray-700 sm:mt-4 sm:text-lg md:text-xl list-disc list-inside">
