@@ -230,15 +230,6 @@ const Dashboard = () => {
           >
             Manage Projects
           </a>
-          <a
-            href="#"
-            className={`block py-2 px-4 rounded ${
-              activeTab === "about" ? "bg-gray-700" : ""
-            }`}
-            onClick={() => setActiveTab("about")}
-          >
-            Manage About
-          </a>
           <button
             className="block py-2 px-4 rounded text-left hover:bg-gray-700"
             onClick={handleLogout}

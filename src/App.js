@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import SignInPage from './pages/SignInPage';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
-import Chat from './pages/Chat';
+import About from './pages/About';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
     element: <Projects />
   },
   {
-    path: '/chat',
-    element: <Chat />
+    path: '/about',
+    element: <About />
   }
 ])
 
