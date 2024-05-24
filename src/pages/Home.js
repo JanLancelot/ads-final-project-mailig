@@ -138,11 +138,6 @@ const Home = () => {
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-yellow-400 hover:bg-yellow-500 transition duration-300 md:py-4 md:text-lg md:px-10"
                   >
                     Get in Touch
-                    {unreadCount > 0 && (
-                      <span className="ml-2 bg-red-500 text-white rounded-full px-2 py-1 text-sm">
-                        {unreadCount}
-                      </span>
-                    )}
                   </a>
                 </div>
               </div>
