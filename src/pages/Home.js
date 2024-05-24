@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
-import ChatWindow from '../components/ChatWindow'
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import ChatWindow from '../components/ChatWindow';
+import { collection, addDoc, onSnapshot, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
 const Home = () => {
@@ -15,38 +15,22 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const logosContainerRef = useRef(null);
   const logosRef = useRef(null);
 
-  const featuredProjects = [
-    {
-      title: "E-Commerce Platform",
-      description:
-        "Developed a robust e-commerce platform with React, handling product listings, shopping cart, and secure checkout.",
-      image:
-        "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
-      link: "/project1",
-    },
-    {
-      title: "Real-Time Chat App",
-      description:
-        "Built a real-time chat application using Firebase for seamless communication and group messaging.",
-      image:
-        "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
-      link: "/project2",
-    },
-    {
-      title: "Portfolio Website",
-      description:
-        "Designed and implemented a modern portfolio website showcasing my skills and projects.",
-      image:
-        "https://colorlib.com/wp/wp-content/uploads/sites/2/15_awesome-websites.jpg",
-      link: "/project3",
-    },
-  ];
-
   useEffect(() => {
+    // Fetch featured projects from Firebase
+    const fetchFeaturedProjects = async () => {
+      const q = query(collection(db, "projects"), where("featured", "==", true));
+      const querySnapshot = await getDocs(q);
+      const projects = querySnapshot.docs.map(doc => doc.data());
+      setFeaturedProjects(projects);
+    };
+
+    fetchFeaturedProjects();
+
     // Marquee scroll effect for client logos
     const logosContainer = logosContainerRef.current;
     const logos = logosRef.current;
@@ -220,6 +204,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Contact Section */}
       <section id="contact" className="py-12 bg-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
@@ -301,8 +287,10 @@ const Home = () => {
           )}
         </div>
       </section>
+
       <ChatWindow />
     </Layout>
   );
 };
+
 export default Home;
