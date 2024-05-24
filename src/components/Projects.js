@@ -9,13 +9,8 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { motion } from "framer-motion";
-import {
-  ArrowRightIcon,
-  StarIcon,
-} from "@heroicons/react/24/outline";
-import {
-  StarIcon as StarIconSolid,
-} from "@heroicons/react/24/solid";
+import { ArrowRightIcon, StarIcon } from "@heroicons/react/24/outline";
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -172,71 +167,73 @@ const Projects = () => {
             <label className="block text-gray-700 mb-2">Image</label>
             <input
               type="file"
+              accept="image/*"
               onChange={handleImageChange}
               className="w-full px-3 py-2 border rounded-lg"
             />
           </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-          >
-            {isEditing ? "Update Project" : "Add Project"}
-          </button>
-          <button
-            type="button"
-            onClick={resetForm}
-            className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg"
-          >
-            Cancel
-          </button>
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+            >
+              {isEditing ? "Update Project" : "Add Project"}
+            </button>
+          </div>
         </form>
       ) : null}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projects.map((project) => (
-          <motion.div
-            key={project.id}
-            className="bg-white p-6 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-48 object-cover rounded-lg mb-4"
-            />
-            <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
-            <p className="text-gray-700 mb-4">{project.description}</p>
-            <a
-              href={project.link}
-              className="text-blue-500 hover:underline flex items-center"
-              target="_blank"
-              rel="noopener noreferrer"
+      {!showForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
+            <motion.div
+              key={project.id}
+              className="bg-white p-6 rounded-lg shadow-md relative"
+              whileHover={{ scale: 1.05 }}
             >
-              View Project <ArrowRightIcon className="w-4 h-4 ml-1" />
-            </a>
-            <div className="flex justify-end mt-4 space-x-2">
+              <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
+              <p className="text-gray-700 mb-4">{project.description}</p>
+              {project.image && (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover mb-4 rounded-lg"
+                />
+              )}
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                View Project <ArrowRightIcon className="inline h-5 w-5" />
+              </a>
               <button
                 onClick={() => startEditing(project)}
-                className="px-4 py-2 bg-yellow-500 text-white rounded-lg"
+                className="absolute top-4 right-4 px-2 py-1 bg-yellow-500 text-white rounded-full"
               >
                 Edit
               </button>
-              <motion.button
+              <button
                 onClick={() => toggleFeatured(project)}
-                className={`px-4 py-2 rounded-lg ${
-                  project.featured ? "bg-yellow-400" : "bg-gray-300"
-                } text-white flex items-center justify-center`}
-                whileTap={{ scale: 0.9 }}
+                className="absolute top-4 left-4 px-2 py-1 bg-red-500 text-white rounded-full"
               >
                 {project.featured ? (
-                  <StarIconSolid className="w-5 h-5 text-yellow-600" />
+                  <StarIconSolid className="h-5 w-5" />
                 ) : (
-                  <StarIcon className="w-5 h-5 text-gray-600" />
+                  <StarIcon className="h-5 w-5" />
                 )}
-              </motion.button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
