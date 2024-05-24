@@ -103,10 +103,10 @@ const Dashboard = () => {
     );
   };
 
-  const filterMessages = (archived) => {
+  const filterMessages = () => {
     const filteredMessages = messages.filter(
       (message) =>
-        message.archived === archived &&
+        (!message.archived || message.archived === false) &&
         (searchQuery === "" ||
           message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
