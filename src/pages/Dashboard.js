@@ -158,7 +158,7 @@ const Dashboard = () => {
       <div
         className={`${
           showSidebar ? "block" : "hidden"
-        } bg-gray-800 text-gray-100 w-64 p-4 md:block`}
+        } fixed top-0 left-0 bottom-0 w-64 bg-gray-800 text-gray-100 p-4 overflow-y-auto`}
       >
         <div className="mb-4">
           <h2 className="text-xl font-bold">Dashboard</h2>
@@ -300,7 +300,7 @@ const Dashboard = () => {
                               ).toLocaleString()}
                             </p>
                             <div className="mt-2 flex space-x-2">
-                              <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                              <span className="px-6 py-1 text-xs rounded bg-green-200 text-green-800">
                                 Read
                               </span>
                               <button
