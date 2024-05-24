@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import necessary functions from storage
 import { motion } from "framer-motion";
-import { ArrowRightIcon } from "@heroicons/react/outline";
+import { ArrowRightIcon } from "@heroicons/react/24/outline"; 
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
