@@ -168,7 +168,7 @@ const Home = () => {
           <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
             Featured Projects
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
             {featuredProjects.map((project) => (
               <CardContainer key={project.title} className="inter-var m-12">
                 <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border">
