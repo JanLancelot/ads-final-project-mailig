@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Disclosure } from "@headlessui/react";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { InboxIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { db } from "../firebase";
 import {
   collection,
@@ -13,36 +10,19 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-const navigation = [
-  {
-    name: "Messages",
-    icon: InboxIcon,
-    current: false,
-    children: [
-      { name: "All Messages", href: "#messages" },
-      { name: "Archived", href: "#archived" },
-    ],
-  },
-  {
-    name: "Content",
-    href: "#content",
-    icon: DocumentDuplicateIcon,
-    current: false,
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("messages"); // Start with 'messages'
+  const [activeTab, setActiveTab] = useState("messages");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [orderDirection, setOrderDirection] = useState("asc");
   const [totalMessages, setTotalMessages] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -132,6 +112,7 @@ const Dashboard = () => {
           message.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
           message.message.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+
     const allMessages = filteredMessages;
     const readMessages = filteredMessages.filter((message) => message.read);
     const unreadMessages = filteredMessages.filter((message) => !message.read);
@@ -149,278 +130,243 @@ const Dashboard = () => {
     );
 
     setMessages((prevMessages) => {
-      return [...prevMessages].sort((a, b) => {
-        // Create new array to avoid mutating state directly
+      return prevMessages.sort((a, b) => {
         if (orderDirection === "asc") {
-          return a.timestamp.toDate() - b.timestamp.toDate();
+          return a.timestamp - b.timestamp;
         } else {
-          return b.timestamp.toDate() - a.timestamp.toDate();
+          return b.timestamp - a.timestamp;
         }
       });
     });
   };
 
   return (
-    <div className="">
-      {/* Sidebar */}
-      <div className="flex grow-0 flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 w-72">
-        <div className="flex h-16 shrink-0 items-center">
-          {/* Replace with your logo */}
-          <img
-            className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
+    <div className="flex h-screen">
+      <button
+        className="flex md:hidden items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-gray-900 hover:border-gray-300"
+        onClick={toggleSidebar}
+      >
+        <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fillRule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clipRule="evenodd"
           />
+        </svg>
+      </button>
+      {/* Sidebar */}
+      <div
+        className={`bg-gray-800 text-gray-100 w-64 p-4 md:block ${
+          showSidebar ? "block" : "hidden"
+        } sticky top-0`}
+      >
+        <div className="mb-4">
+          <h2 className="text-xl font-bold">Dashboard</h2>
         </div>
-        <nav className="flex flex-1 flex-col">
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li>
-              <ul role="list" className="-mx-2 space-y-1">
-                {navigation.map((item) => (
-                  <li key={item.name}>
-                    {!item.children ? (
-                      <a
-                        href={item.href}
-                        onClick={() => setActiveTab(item.name.toLowerCase())}
-                        className={classNames(
-                          item.name.toLowerCase() === activeTab
-                            ? "bg-gray-50"
-                            : "hover:bg-gray-50",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700"
-                        )}
-                      >
-                        <item.icon
-                          className="h-6 w-6 shrink-0 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ) : (
-                      <Disclosure as="div">
-                        {({ open }) => (
-                          <>
-                            <Disclosure.Button
-                              className={classNames(
-                                open ? "bg-gray-50" : "hover:bg-gray-50",
-                                "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700"
-                              )}
-                            >
-                              <item.icon
-                                className="h-6 w-6 shrink-0 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                              <ChevronRightIcon
-                                className={classNames(
-                                  open
-                                    ? "rotate-90 text-gray-500"
-                                    : "text-gray-400",
-                                  "ml-auto h-5 w-5 shrink-0"
-                                )}
-                                aria-hidden="true"
-                              />
-                            </Disclosure.Button>
-                            <Disclosure.Panel as="ul" className="mt-1 px-2">
-                              {item.children.map((subItem) => (
-                                <li key={subItem.name}>
-                                  <Disclosure.Button
-                                    as="a"
-                                    href={subItem.href}
-                                    onClick={() =>
-                                      setActiveTab(
-                                        subItem.name
-                                          .toLowerCase()
-                                          .replace(/\s+/g, "")
-                                      )
-                                    }
-                                    className={classNames(
-                                      subItem.name
-                                        .toLowerCase()
-                                        .replace(/\s+/g, "") === activeTab
-                                        ? "bg-gray-50"
-                                        : "hover:bg-gray-50",
-                                      "block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700"
-                                    )}
-                                  >
-                                    {subItem.name}
-                                  </Disclosure.Button>
-                                </li>
-                              ))}
-                            </Disclosure.Panel>
-                          </>
-                        )}
-                      </Disclosure>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          </ul>
+        <nav>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "messages" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("messages")}
+          >
+            Messages
+          </a>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "archived" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("archived")}
+          >
+            Archived
+          </a>
+          <a
+            href="#"
+            className={`block py-2 px-4 rounded ${
+              activeTab === "content" ? "bg-gray-700" : ""
+            }`}
+            onClick={() => setActiveTab("content")}
+          >
+            Content
+          </a>
         </nav>
       </div>
-
-      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        {/* Main Content Area */}
-        <div className="">
-          {activeTab === "messages" && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Messages</h2>
-              <div className="mb-4 flex items-center">
-                <input
-                  type="text"
-                  placeholder="Search messages..."
-                  className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-                  onClick={handleSortChange}
-                >
-                  Sort {orderDirection === "asc" ? "▲" : "▼"}
-                </button>
-              </div>
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-gray-600">
-                  Total Messages: {totalMessages} | Unread: {unreadCount}
-                </p>
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                  onClick={markAllAsRead}
-                >
-                  Mark All as Read
-                </button>
-              </div>
-              {filterMessages(false).length > 0 ? (
-                <>
-                  <h3 className="text-lg font-semibold mb-2">
-                    Unread Messages
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                    {filterMessages(false)
-                      .filter((message) => !message.read)
-                      .map((message) => (
-                        <div
-                          key={message.id}
-                          className={`bg-white shadow-md rounded-md p-4 ${
-                            !message.read ? "border-l-4 border-blue-500" : ""
-                          }`}
-                        >
-                          <h3 className="text-lg font-bold">{message.name}</h3>
-                          <p className="text-gray-600">{message.email}</p>
-                          <p className="mt-2">{message.message}</p>
-                          <p className="text-gray-500">
-                            {new Date(
-                              message.timestamp.seconds * 1000
-                            ).toLocaleString()}
-                          </p>
-                          <div className="mt-2 flex space-x-2">
-                            <button
-                              className="px-4 py-2 rounded bg-blue-500 text-white"
-                              onClick={() => toggleRead(message.id)}
-                            >
-                              Mark as Read
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-red-500 text-white"
-                              onClick={() => deleteMessage(message.id)}
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-yellow-500 text-white"
-                              onClick={() => archiveMessage(message.id)}
-                            >
-                              Archive
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">Read Messages</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {filterMessages(false)
-                      .filter((message) => message.read)
-                      .map((message) => (
-                        <div
-                          key={message.id}
-                          className="bg-white shadow-md rounded-md p-4"
-                        >
-                          <h3 className="text-lg font-bold">{message.name}</h3>
-                          <p className="text-gray-600">{message.email}</p>
-                          <p className="mt-2">{message.message}</p>
-                          <p className="text-gray-500">
-                            {new Date(
-                              message.timestamp.seconds * 1000
-                            ).toLocaleString()}
-                          </p>
-                          <div className="mt-2 flex space-x-2">
-                            <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
-                              Read
-                            </span>
-                            <button
-                              className="px-4 py-2 rounded bg-red-500 text-white"
-                              onClick={() => deleteMessage(message.id)}
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="px-4 py-2 rounded bg-yellow-500 text-white"
-                              onClick={() => archiveMessage(message.id)}
-                            >
-                              Archive
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </>
-              ) : (
-                <p>No messages found.</p>
-              )}
-            </div>
-          )}
-          {activeTab === "archived" && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Archived Messages</h2>
-              {filterMessages(true).length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {filterMessages(true).map((message) => (
-                    <div
-                      key={message.id}
-                      className="bg-white shadow-md rounded-md p-4"
-                    >
-                      <h3 className="text-lg font-bold">{message.name}</h3>
-                      <p className="text-gray-600">{message.email}</p>
-                      <p className="mt-2">{message.message}</p>
-                      <p className="text-gray-500">
-                        {new Date(
-                          message.timestamp.seconds * 1000
-                        ).toLocaleString()}
-                      </p>
-                      <div className="mt-2 flex space-x-2">
-                        <button
-                          className="px-4 py-2 rounded bg-red-500 text-white"
-                          onClick={() => deleteMessage(message.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+      {/* Main Content */}
+      <div className="flex-1 p-4">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-75"></div>
+          </div>
+        ) : (
+          <>
+            {activeTab === "messages" && (
+              <div>
+                <h2 className="text-xl font-bold mb-4">Messages</h2>
+                <div className="mb-4 flex items-center">
+                  <input
+                    type="text"
+                    placeholder="Search messages..."
+                    className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+                    onClick={handleSortChange}
+                  >
+                    Sort {orderDirection === "asc" ? "▲" : "▼"}
+                  </button>
                 </div>
-              ) : (
-                <p>No archived messages found.</p>
-              )}
-            </div>
-          )}
-          {activeTab === "content" && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Content</h2>
-              {/* Add your content tab logic here */}
-            </div>
-          )}
-        </div>
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-gray-600">
+                    Total Messages: {totalMessages} | Unread: {unreadCount}
+                  </p>
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    onClick={markAllAsRead}
+                  >
+                    Mark All as Read
+                  </button>
+                </div>
+                {filterMessages(false).length > 0 ? (
+                  <>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Unread Messages
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                      {filterMessages(false)
+                        .filter((message) => !message.read)
+                        .map((message) => (
+                          <div
+                            key={message.id}
+                            className={`bg-white shadow-md rounded-md p-4 ${
+                              !message.read ? "border-l-4 border-blue-500" : ""
+                            }`}
+                          >
+                            <h3 className="text-lg font-bold">
+                              {message.name}
+                            </h3>
+                            <p className="text-gray-600">{message.email}</p>
+                            <p className="mt-2">{message.message}</p>
+                            <p className="text-gray-500">
+                              {new Date(
+                                message.timestamp.seconds * 1000
+                              ).toLocaleString()}
+                            </p>
+                            <div className="mt-2 flex space-x-2">
+                              <button
+                                className="px-4 py-2 rounded bg-blue-500 text-white"
+                                onClick={() => toggleRead(message.id)}
+                              >
+                                Mark as Read
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-red-500 text-white"
+                                onClick={() => deleteMessage(message.id)}
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-yellow-500 text-white"
+                                onClick={() => archiveMessage(message.id)}
+                              >
+                                Archive
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Read Messages
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {filterMessages(false)
+                        .filter((message) => message.read)
+                        .map((message) => (
+                          <div
+                            key={message.id}
+                            className="bg-white shadow-md rounded-md p-4"
+                          >
+                            <h3 className="text-lg font-bold">
+                              {message.name}
+                            </h3>
+                            <p className="text-gray-600">{message.email}</p>
+                            <p className="mt-2">{message.message}</p>
+                            <p className="text-gray-500">
+                              {new Date(
+                                message.timestamp.seconds * 1000
+                              ).toLocaleString()}
+                            </p>
+                            <div className="mt-2 flex space-x-2">
+                              <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                                Read
+                              </span>
+                              <button
+                                className="px-4 py-2 rounded bg-red-500 text-white"
+                                onClick={() => deleteMessage(message.id)}
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="px-4 py-2 rounded bg-yellow-500 text-white"
+                                onClick={() => archiveMessage(message.id)}
+                              >
+                                Archive
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </>
+                ) : (
+                  <p>No messages found.</p>
+                )}
+              </div>
+            )}
+            {activeTab === "archived" && (
+              <div>
+                <h2 className="text-xl font-bold mb-4">Archived Messages</h2>
+                {filterMessages(true).length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {filterMessages(true).map((message) => (
+                      <div
+                        key={message.id}
+                        className="bg-white shadow-md rounded-md p-4"
+                      >
+                        <h3 className="text-lg font-bold">{message.name}</h3>
+                        <p className="text-gray-600">{message.email}</p>
+                        <p className="mt-2">{message.message}</p>
+                        <p className="text-gray-500">
+                          {new Date(
+                            message.timestamp.seconds * 1000
+                          ).toLocaleString()}
+                        </p>
+                        <div className="mt-2 flex space-x-2">
+                          <button
+                            className="px-4 py-2 rounded bg-red-500 text-white"
+                            onClick={() => deleteMessage(message.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No archived messages found.</p>
+                )}
+              </div>
+            )}
+            {activeTab === "content" && (
+              <div>
+                <h2 className="text-xl font-bold mb-4">Content</h2>
+                {/* Add your content tab logic here */}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
