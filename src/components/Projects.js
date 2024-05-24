@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db, storage } from "../firebase"; // Make sure to import storage
 import {
   collection,
   doc,
@@ -7,6 +7,7 @@ import {
   updateDoc,
   getDocs,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import necessary functions from storage
 import { motion } from "framer-motion";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 
@@ -17,7 +18,7 @@ const Projects = () => {
     title: "",
     description: "",
     link: "",
-    image: "",
+    image: null, // Store the File object here
   });
 
   useEffect(() => {
@@ -41,21 +42,34 @@ const Projects = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCurrentProject({ ...currentProject, image: reader.result });
-      };
-      reader.readAsDataURL(file);
+      setCurrentProject({ ...currentProject, image: file });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      await updateDoc(doc(db, "projects", currentProject.id), currentProject);
-    } else {
-      await addDoc(collection(db, "projects"), currentProject);
+
+    let imageUrl = "";
+
+    if (currentProject.image) {
+      const imageRef = ref(storage, `images/${currentProject.image.name}`);
+      await uploadBytes(imageRef, currentProject.image);
+      imageUrl = await getDownloadURL(imageRef);
     }
+
+    const projectData = {
+      title: currentProject.title,
+      description: currentProject.description,
+      link: currentProject.link,
+      image: imageUrl,
+    };
+
+    if (isEditing) {
+      await updateDoc(doc(db, "projects", currentProject.id), projectData);
+    } else {
+      await addDoc(collection(db, "projects"), projectData);
+    }
+
     resetForm();
     const querySnapshot = await getDocs(collection(db, "projects"));
     const projectsData = querySnapshot.docs.map((doc) => ({
@@ -70,7 +84,7 @@ const Projects = () => {
       title: "",
       description: "",
       link: "",
-      image: "",
+      image: null,
     });
     setIsEditing(false);
   };
@@ -123,17 +137,10 @@ const Projects = () => {
           <label className="block text-gray-700 mb-2">Image</label>
           <input
             type="file"
-            accept="image/*"
+            name="image"
             onChange={handleImageChange}
             className="w-full px-3 py-2 border rounded-lg"
           />
-          {currentProject.image && (
-            <img
-              src={currentProject.image}
-              alt="Project preview"
-              className="mt-2 w-full h-48 object-cover"
-            />
-          )}
         </div>
         <div className="flex justify-end">
           <button
