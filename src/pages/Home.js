@@ -12,7 +12,7 @@ import {
 import { db } from "../firebase";
 import { motion } from "framer-motion";
 import { cn } from "../utils/cn";
-import { Spotlight } from "../components/Spotlight";
+import { Spotlight } from "../components/ui/Spotlight";
 
 import lancelot from "../images/lancelot.png";
 
