@@ -6,6 +6,7 @@ import SignInPage from './pages/SignInPage';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import About from './pages/About';
+import RegisterPage from './pages/RegisterPage';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <SignInPage />
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />
   },
   {
     path: '/dashboard',
