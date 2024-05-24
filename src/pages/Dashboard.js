@@ -335,7 +335,10 @@ const Dashboard = () => {
                             className="bg-white shadow-md rounded-md p-4"
                           >
                             <h3 className="text-lg font-bold">
-                              {message.name}
+                              {message.name}{" "}
+                              <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
+                                Read
+                              </span>
                             </h3>
                             <p className="text-gray-600">{message.email}</p>
                             <p className="mt-2">{message.message}</p>
@@ -345,9 +348,6 @@ const Dashboard = () => {
                               ).toLocaleString()}
                             </p>
                             <div className="mt-2 flex space-x-2">
-                              <span className="px-2 py-1 text-xs rounded bg-green-200 text-green-800">
-                                Read
-                              </span>
                               <button
                                 className="px-4 py-2 rounded bg-red-500 text-white"
                                 onClick={() => deleteMessage(message.id)}
@@ -408,12 +408,6 @@ const Dashboard = () => {
               <div>
                 <h2 className="text-xl font-bold mb-4">Manage Projects</h2>
                 <Projects />
-              </div>
-            )}
-            {activeTab === "about" && (
-              <div>
-                <h2 className="text-xl font-bold mb-4">Manage About</h2>
-                {/* Add your content tab logic here */}
               </div>
             )}
           </>
