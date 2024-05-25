@@ -158,44 +158,65 @@ const Home = () => {
         </div>
       </div>
       {/* Featured Projects Section */}
-      <section id="projects" className="py-12 bg-gray-800">
+      <section id="projects" className="py-12 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
+          <h2 className="text-3xl font-extrabold text-yellow-500 mb-8 text-center">
             Featured Projects
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
-              <div
-                key={project.title}
-                className="bg-white rounded-lg overflow-hidden shadow-md"
-              >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{project.description}</p>
-                  <Link
-                    to={project.link}
-                    className="text-yellow-500 hover:text-yellow-600"
+              <CardContainer className="inter-var">
+                <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
+                  <CardItem
+                    translateZ="50"
+                    className="text-xl font-bold text-neutral-600 dark:text-white"
                   >
-                    View Website
-                  </Link>
-                </div>
-              </div>
+                    Make things float in air
+                  </CardItem>
+                  <CardItem
+                    as="p"
+                    translateZ="60"
+                    className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                  >
+                    Hover over this card to unleash the power of CSS perspective
+                  </CardItem>
+                  <CardItem translateZ="100" className="w-full mt-4">
+                    <img
+                      src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      height="1000"
+                      width="1000"
+                      className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                      alt="thumbnail"
+                    />
+                  </CardItem>
+                  <div className="flex justify-between items-center mt-20">
+                    <CardItem
+                      translateZ={20}
+                      as={Link}
+                      href="https://twitter.com/mannupaaji"
+                      target="__blank"
+                      className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
+                    >
+                      Try now →
+                    </CardItem>
+                    <CardItem
+                      translateZ={20}
+                      as="button"
+                      className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+                    >
+                      Sign up
+                    </CardItem>
+                  </div>
+                </CardBody>
+              </CardContainer>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-12 bg-blue-900">
+      <section id="contact" className="py-12 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
+          <h2 className="text-3xl font-extrabold text-yellow-500 mb-8 text-center">
             Contact Me
           </h2>
           {formSubmitted ? (
@@ -217,7 +238,7 @@ const Home = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   required
                 />
               </div>
@@ -235,7 +256,7 @@ const Home = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   required
                 />
               </div>
@@ -252,7 +273,7 @@ const Home = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   rows="4"
                   required
                 ></textarea>
