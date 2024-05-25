@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import './Navbar.css'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +14,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link
-                to="/"
-                className="text-yellow-400 font-bold text-xl glow-text"
-              >
+              <Link to="/" className="glow text-yellow-400 font-bold text-xl">
                 Lancelot
               </Link>
             </div>
@@ -107,18 +103,6 @@ const Navbar = () => {
             className="text-gray-300 hover:bg-yellow-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium"
           >
             Projects
-          </Link>
-          <Link
-            to="/skills"
-            className="text-gray-300 hover:bg-yellow-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Skills
-          </Link>
-          <Link
-            to="/contact"
-            className="text-gray-300 hover:bg-yellow-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Contact
           </Link>
         </div>
       </div>
