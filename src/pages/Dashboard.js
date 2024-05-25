@@ -94,15 +94,21 @@ const Dashboard = () => {
     const messageRef = doc(db, "messages", messageId);
     await deleteDoc(messageRef);
 
-    setMessages((prevMessages) =>
-      prevMessages.filter((message) => message.id !== messageId)
-    );
-    setTotalMessages((prevTotal) => prevTotal - 1);
-    setUnreadCount((prevUnreadCount) =>
-      messages.find((message) => message.id === messageId && !message.read)
-        ? prevUnreadCount - 1
-        : prevUnreadCount
-    );
+    if (activeTab === "messages") {
+      setMessages((prevMessages) =>
+        prevMessages.filter((message) => message.id !== messageId)
+      );
+      setTotalMessages((prevTotal) => prevTotal - 1);
+      setUnreadCount((prevUnreadCount) =>
+        messages.find((message) => message.id === messageId && !message.read)
+          ? prevUnreadCount - 1
+          : prevUnreadCount
+      );
+    } else if (activeTab === "archived") {
+      setArchivedMessages((prevArchivedMessages) =>
+        prevArchivedMessages.filter((message) => message.id !== messageId)
+      );
+    }
   };
 
   const archiveMessage = async (messageId) => {
@@ -275,13 +281,13 @@ const Dashboard = () => {
                     Mark All as Read
                   </button>
                 </div>
-                {filterMessages(false).length > 0 ? (
+                {filterMessages().length > 0 ? (
                   <>
                     <h3 className="text-lg font-semibold mb-2">
                       Unread Messages
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                      {filterMessages(false)
+                      {filterMessages()
                         .filter((message) => !message.read)
                         .map((message) => (
                           <div
@@ -327,7 +333,7 @@ const Dashboard = () => {
                       Read Messages
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                      {filterMessages(false)
+                      {filterMessages()
                         .filter((message) => message.read)
                         .map((message) => (
                           <div
