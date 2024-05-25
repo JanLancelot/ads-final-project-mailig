@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 
 const RobotModel = () => {
-  const { scene } = useGLTF('/path/to/your/robot/model.gltf'); // Adjust the path to your 3D model
+  const { scene } = useGLTF('/path/to/robot/model.gltf');
 
   return (
     <Canvas>

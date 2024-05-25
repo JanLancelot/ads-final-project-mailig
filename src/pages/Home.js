@@ -32,7 +32,6 @@ const Home = () => {
   const logosRef = useRef(null);
 
   useEffect(() => {
-    // Fetch featured projects from Firebase
     const fetchFeaturedProjects = async () => {
       const q = query(
         collection(db, "projects"),
@@ -45,7 +44,6 @@ const Home = () => {
 
     fetchFeaturedProjects();
 
-    // Listen for changes in the 'messages' collection
     const unsubscribe = onSnapshot(
       collection(db, "messages"),
       (querySnapshot) => {
@@ -60,7 +58,6 @@ const Home = () => {
       }
     );
 
-    // Clean up the listener when the component unmounts
     return unsubscribe;
   }, []);
 
@@ -74,14 +71,14 @@ const Home = () => {
     setErrorMessage(null);
 
     try {
-      const messagesRef = collection(db, "messages"); // Reference to the "messages" collection
+      const messagesRef = collection(db, "messages"); 
       await addDoc(messagesRef, {
         ...formData,
         read: false,
         timestamp: new Date(),
       });
       setFormSubmitted(true);
-      setFormData({ name: "", email: "", message: "" }); // Reset form data
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Error adding document:", error);
       setErrorMessage("An error occurred while sending your message.");

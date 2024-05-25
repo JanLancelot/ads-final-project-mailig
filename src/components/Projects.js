@@ -115,7 +115,6 @@ const Projects = () => {
       featured: !project.featured,
     });
 
-    // Update local state
     setProjects((prevProjects) =>
       prevProjects.map((p) =>
         p.id === project.id ? { ...p, featured: !p.featured } : p
@@ -222,7 +221,6 @@ const Projects = () => {
               </a>
               <div className="flex mt-4">
                 {" "}
-                {/* Added flex container */}
                 <button
                   onClick={() => startEditing(project)}
                   className="px-2 py-1 bg-yellow-500 text-white rounded-full mr-2"
