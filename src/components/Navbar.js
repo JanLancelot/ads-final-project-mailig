@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import './Navbar.css'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,10 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link to="/" className="text-yellow-400 font-bold text-xl">
+              <Link
+                to="/"
+                className="text-yellow-400 font-bold text-xl glow-text"
+              >
                 Lancelot
               </Link>
             </div>
@@ -90,7 +94,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
+      <div className={`${isOpen ? "block" : "hidden"} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link
             to="/about"
